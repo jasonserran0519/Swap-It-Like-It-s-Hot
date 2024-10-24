@@ -1,12 +1,21 @@
 import firebase_admin
 from firebase_admin import credentials, firestore
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template, redirect, url_for, g, flash
 
 app = Flask(__name__)
 
 cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred)
 db = firestore.client()
+
+# home page, this is not working
+@app.route('/')
+def index():
+    if not g.user:
+        return redirect(url_for('auth.login'))
+    books_ref = db.collection('books')
+    books = books_ref.get()
+    return render_template('index.html', books=books)
 
 # view all books
 @app.route('/books', methods=['GET'])
@@ -25,44 +34,40 @@ def get_books():
 def view_book(book_id):
     book_ref = db.collection('books').document(book_id)
     doc = book_ref.get()
-@app.route('/users', methods=['GET'])
-def get_users():
-    users_ref = db.collection('users')
-    docs = users_ref.stream()
-
-    users = []
-    for doc in docs:
-        users.append(doc.to_dict())
-
-    return jsonify(users)
-
-@app.route('/users/<user_id>', methods=['GET'])
-def get_user(user_id):
-    user_ref = db.collection('users').document(user_id)
-    doc = user_ref.get()
 
     if doc.exists:
         return jsonify(doc.to_dict())
     else:
         return jsonify({"error": "Book not found"}), 404
 
-# add new book
-@app.route('/add_book', methods=['POST'])
-def add_book():
-    data = request.get_json()
-    book_ref = db.collection('books').document()
-    book_ref.set(data)
+# add a new book
+@app.route('/add-book')
+def book_form():
+    return render_template('newpost.html')
 
-    return jsonify({"id": book_ref.id}), 201
+# form submitted
+@app.route('/added-book', methods=['POST'])
+#@login_required
+def add_book():
+    name = request.form.get('name')
+    author = request.form.get('author')
+    price = request.form.get('price')
+    version = request.form.get('version')
+    course_num = request.form.get('course_num')
+    contact = request.form.get('contact')
+    #seller needs to be current user
+
+    # Create a dictionary to store the form data
+    form_data = {
+        'name': name,
+        'author': author,
+        'price': price,
+        'version': version,
+        'course_num': course_num,
+        'contact': contact
+    }
+    db.collection('books').add(form_data)   # add entry to books collection
+    return f"Form submitted!"
 
 if __name__ == '__main__':
     app.run(debug=True)
-        return jsonify({"error": "User not found"}), 404
-
-@app.route('/users', methods=['POST'])
-def create_user():
-    data = request.get_json()
-    user_ref = db.collection('users').document()
-    user_ref.set(data)
-
-    return jsonify({"id": user_ref.id}), 201
