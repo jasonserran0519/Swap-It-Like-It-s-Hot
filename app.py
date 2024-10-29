@@ -1,18 +1,19 @@
 import firebase_admin
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials, firestore, storage
 from flask import Flask, jsonify, request, render_template, redirect, url_for, g, flash
 
 app = Flask(__name__)
 
 cred = credentials.Certificate("key.json")
-firebase_admin.initialize_app(cred)
+firebase_admin.initialize_app(cred, {'storageBucket': 'swapitlikeithot.appspot.com'})
 db = firestore.client()
+bucket=storage.bucket()
 
 # home page, this is not working
 @app.route('/')
 def index():
-    if not g.user:
-        return redirect(url_for('auth.login'))
+    #if not g.user:
+    #    return redirect(url_for('auth.login'))
     books_ref = db.collection('books')
     books = books_ref.get()
     return render_template('index.html', books=books)
@@ -55,7 +56,13 @@ def add_book():
     version = request.form.get('version')
     course_num = request.form.get('course_num')
     contact = request.form.get('contact')
+    pic = request.files.get('pic')
     #seller needs to be current user
+
+    if pic:
+        pic_url = upload_image(pic)
+    else:
+        pic_url = None
 
     # Create a dictionary to store the form data
     form_data = {
@@ -64,10 +71,18 @@ def add_book():
         'price': price,
         'version': version,
         'course_num': course_num,
-        'contact': contact
+        'contact': contact,
+        'pic': pic_url
     }
     db.collection('books').add(form_data)   # add entry to books collection
-    return f"Form submitted!"
+    return render_template('submitted.html')
+
+def upload_image(pic):
+    blob = bucket.blob(pic.filename)
+    blob.upload_from_file(pic, content_type=pic.content_type)
+    blob.make_public()
+    url = blob.public_url
+    return url
 
 if __name__ == '__main__':
     app.run(debug=True)
