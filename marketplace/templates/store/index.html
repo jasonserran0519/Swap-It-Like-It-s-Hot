@@ -1,0 +1,35 @@
+<!--{% extends 'base.html' %}-->
+
+{% block header %}
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    {% for book in books %}
+      <div class="col-4 card m-2">
+        <img height="auto" width="300" class="card-img-top" 
+             src="{{ book.get('pic', url_for('static', filename='img/placeholder.jpg')) }}" 
+             alt="Book image">
+        <div class="card-body">
+          <h5 class="card-title">{{ book.get('name', 'No Title Available') }}</h5>
+          <p class="card-text">Author: {{ book.get('author', 'Unknown Author') }}</p>
+          <p class="card-text">Price: ${{ book.get('price', 'N/A') }}</p>
+          <p class="card-text">Course: {{ book.get('course_num', 'N/A') }}</p>
+          <div>
+            <!--<form action="{{ url_for('cart.add_cart', item_id=item['id']) }}" method="post">
+              <input class="btn btn-primary" type="submit" value="Add to Cart">
+            </form>
+            {% if g.user['admin']%}
+              <form action="{{ url_for('store.delete', item_id=item['id']) }}" method="post">
+                <input class="btn btn-danger" type="submit" value="Remove">
+              </form>
+            {% endif %}-->
+        </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
