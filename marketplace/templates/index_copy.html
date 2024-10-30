@@ -1,14 +1,21 @@
 {% block header %}
-
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Books List</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
 {% endblock %}
 
 {% block content %}
 <div class="container">
   <div class="row">
     {% for book in books %}
-      <div class="col-4 card m-2">
-        <img height="auto" width="300" class="card-img-top" 
-             src="{{ book.get('pic', url_for('static', filename='img/placeholder.png')) }}" 
+    <div class="col-md-4 col-sm-6 col-lg-3 mb-4"> <!-- Responsive column sizing -->
+      <div class="card h-100 border">
+        <img src="{{ book.get('pic', url_for('static', filename='img/placeholder.png')) }}" 
+             class="card-img-top" 
+             style="height: auto; width: 100%;" 
              alt="Book image">
         <div class="card-body">
           <h5 class="card-title">{{ book.get('name', 'No Title Available') }}</h5>
@@ -17,6 +24,7 @@
           <p class="card-text">Course: {{ book.get('course_num', 'N/A') }}</p>
         </div>
       </div>
+    </div>
     {% endfor %}
   </div>
 </div>
