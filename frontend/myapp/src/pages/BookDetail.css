@@ -1,0 +1,10 @@
+.book-tile {
+    cursor: pointer;
+    text-decoration: none; /* Remove underline */
+  }
+  
+  .book-tile:hover {
+    transform: scale(1.05); /* Add a hover effect */
+    transition: transform 0.2s;
+  }
+  

@@ -1,0 +1,18 @@
+/* App.css */
+nav {
+    background-color: maroon; /* Change this to your desired color */
+    color: white; /* Text color */
+    padding: 10px; /* Padding around the navbar */
+  }
+  
+  nav a {
+    color: white; /* Link color */
+    text-decoration: none; /* Remove underline from links */
+    padding: 10px 15px; /* Padding for links */
+  }
+  
+  nav a:hover {
+    background-color: #45a049; /* Change color on hover */
+    border-radius: 5px; /* Rounded corners on hover */
+  }
+  

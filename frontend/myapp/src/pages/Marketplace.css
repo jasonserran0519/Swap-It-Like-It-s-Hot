@@ -1,0 +1,34 @@
+.marketplace-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+  }
+  
+  .book-tile {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .book-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .book-tile h3 {
+    margin-top: 10px;
+    font-size: 1.2rem;
+  }
+
+  .sidebar {
+    padding: 10px;
+    background-color: beige;
+  }
+
+  .sidebar ul{
+    margin-left: 15px;
+  }
+  

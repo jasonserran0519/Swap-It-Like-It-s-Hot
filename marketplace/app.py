@@ -1,6 +1,7 @@
 import firebase_admin
 from firebase_admin import credentials, firestore, storage
 from flask import Flask, jsonify, request, render_template, redirect, url_for, g, flash
+from flask_cors import CORS
 
 app = Flask(__name__)
 
@@ -8,6 +9,8 @@ cred = credentials.Certificate("key.json")
 firebase_admin.initialize_app(cred, {'storageBucket': 'swapitlikeithot.appspot.com'})
 db = firestore.client()
 bucket=storage.bucket()
+
+CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
 # home page, this is not working
 @app.route('/')
@@ -19,10 +22,16 @@ def index():
     return render_template('index_copy.html', books=books)
 
 # view all books
+# @app.route('/books', methods=['GET'])
+# def get_books():
+#     books_ref = db.collection('books')
+#     books = [doc.to_dict() for doc in books_ref.stream()]
+#     return jsonify(books)
+
 @app.route('/books', methods=['GET'])
 def get_books():
     books_ref = db.collection('books')
-    books = [doc.to_dict() for doc in books_ref.stream()]
+    books = [{"id": doc.to_dict().get('id'), **doc.to_dict()} for doc in books_ref.stream()]  # Include document ID
     return jsonify(books)
 
 # view selected book
