@@ -10,7 +10,12 @@
     border-radius: 8px;
     padding: 10px;
     text-align: left;
-  }
+    transition: transform 0.3s ease; /* Smooth transition for the zoom effect */
+}
+
+.book-tile:hover {
+  transform: scale(1.05); /* Scale up the tile slightly */
+}
   
   .book-image {
     width: 100%;
