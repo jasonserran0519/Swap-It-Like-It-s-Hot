@@ -1,33 +1,44 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import './BookDetail.css'
 
-function BookDetail() {
-  const { id } = useParams(); // Get the book ID from the URL
-  console.log("Received params:", { id }); // Log all params
-
+function BookDetails() {
+  const { id } = useParams();
   const [book, setBook] = useState(null);
-  console.log("Fetching details for book ID:", id); // Log the ID
-
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
-    const fetchBookDetail = async () => {
+    const fetchBookDetails = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books/${id}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
         const data = await response.json();
-        setBook(data);
+        
+        // If data contains an error message from the backend
+        if (data.error) {
+          setError(data.error);
+        } else {
+          setBook(data);
+        }
       } catch (error) {
         console.error("Error fetching book details:", error);
+        setError("Could not fetch book details. Please try again later.");
+      } finally {
+        setLoading(false);  // Set loading to false after request completes
       }
     };
 
-    fetchBookDetail();
+    fetchBookDetails();
   }, [id]);
 
-  if (!book) {
+  if (loading) {
     return <div>Loading...</div>;
-  } else if (book.error) {
-    return <div>{book.error}</div>; // Error state
+  }
+
+  if (error) {
+    return <div>{error}</div>;  // Show error message if there's an issue
   }
 
   return (
@@ -43,4 +54,4 @@ function BookDetail() {
   );
 }
 
-export default BookDetail;
+export default BookDetails;

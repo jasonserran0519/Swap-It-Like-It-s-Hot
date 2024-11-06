@@ -28,10 +28,20 @@ def index():
 #     books = [doc.to_dict() for doc in books_ref.stream()]
 #     return jsonify(books)
 
+# @app.route('/books', methods=['GET'])
+# def get_books():
+#     books_ref = db.collection('books')
+#     books = [{"id": doc.to_dict().get('id'), **doc.to_dict()} for doc in books_ref.stream()]  # Include document ID
+#     return jsonify(books)
+
 @app.route('/books', methods=['GET'])
 def get_books():
     books_ref = db.collection('books')
-    books = [{"id": doc.to_dict().get('id'), **doc.to_dict()} for doc in books_ref.stream()]  # Include document ID
+    books = []
+    for doc in books_ref.stream():
+        book_data = doc.to_dict()
+        book_data['id'] = doc.id  # Add the document ID to each book's data
+        books.append(book_data)
     return jsonify(books)
 
 # view selected book
