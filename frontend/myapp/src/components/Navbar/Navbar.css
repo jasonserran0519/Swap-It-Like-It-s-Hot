@@ -1,18 +1,102 @@
-/* App.css */
-nav {
-    background-color: maroon; /* Change this to your desired color */
-    color: white; /* Text color */
-    padding: 10px; /* Padding around the navbar */
+/* Navbar.css */
+
+nav.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: maroon;
+    color: white;
+    padding: 10px 20px;
   }
   
-  nav a {
-    color: white; /* Link color */
-    text-decoration: none; /* Remove underline from links */
-    padding: 10px 15px; /* Padding for links */
+  .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;  /* White background */
+    border-radius: 50%;       /* Circular shape */
+    padding: 2px;            /* Padding inside the circle */
   }
   
-  nav a:hover {
-    background-color: #45a049; /* Change color on hover */
-    border-radius: 5px; /* Rounded corners on hover */
+  .logo-image {
+    height: 40px; /* Adjust size as needed */
+    width: 40px;  /* Make sure the image is also square */
+    object-fit: contain; /* Ensures the logo fits well within the circle */
+    cursor: pointer; /* Make logo clickable */
   }
   
+  .navbar-left, .navbar-center, .navbar-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .navbar-center {
+    flex: 1; /* This makes the center section expand to take available space */
+    display: flex;
+    justify-content: center;
+  }
+  
+  .search-form {
+    display: flex;
+    align-items: center;
+  }
+  
+  .search-input {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+    width: 250px;
+  }
+  
+  .category-select {
+    padding: 5px;
+    border: 1px solid #ddd;
+    border-radius: 0;
+    outline: none;
+  }
+  
+  .search-button {
+    padding: 5px 10px;
+    background-color: darkorange;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+  }
+  
+  .search-button:hover {
+    background-color: darkgoldenrod;
+  }
+  
+  .navbar-right .nav-link {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+  }
+  
+  .navbar-right .nav-link:hover {
+    background-color: darkgoldenrod;
+    border-radius: 5px;
+  }
+  
+  .add-book-btn {
+    background-color: darkorange;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center; /* Vertically center */
+    justify-content: center; /* Horizontally center */
+    font-size: 24px;
+    font-weight: bold;
+    margin-left: 15px;
+    text-align: center; /* Ensure text is centered */
+  }
+  
+  .add-book-btn:hover {
+    background-color: darkgoldenrod;
+  }
