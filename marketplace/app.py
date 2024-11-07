@@ -64,32 +64,38 @@ def book_form():
 @app.route('/added-book', methods=['POST'])
 #@login_required
 def add_book():
-    name = request.form.get('name')
-    author = request.form.get('author')
-    price = request.form.get('price')
-    version = request.form.get('version')
-    course_num = request.form.get('course_num')
-    contact = request.form.get('contact')
-    pic = request.files.get('pic')
-    #seller needs to be current user
+    try:
+        name = request.form.get('name')
+        author = request.form.get('author')
+        version = request.form.get('version')
+        isbn = request.form.get('isbn')
+        course_num = request.form.get('course_num')
+        price = request.form.get('price')
+        contact = request.form.get('contact')
+        #seller needs to be current user
 
-    if pic:
-        pic_url = upload_image(pic)
-    else:
-        pic_url = None
+        pic = request.files.get('pic')
+        if pic:
+            pic_url = upload_image(pic)
+        else:
+            pic_url = None
 
-    # Create a dictionary to store the form data
-    form_data = {
-        'name': name,
-        'author': author,
-        'price': price,
-        'version': version,
-        'course_num': course_num,
-        'contact': contact,
-        'pic': pic_url
-    }
-    db.collection('books').add(form_data)   # add entry to books collection
-    return render_template('submitted.html')
+        # Create a dictionary to store the form data
+        form_data = {
+            'name': name,
+            'author': author,
+            'version': version,
+            'isbn': isbn,
+            'course_num': course_num,
+            'price': float(price),
+            'contact': contact,
+            'pic': pic_url
+        }
+        db.collection('books').add(form_data)   # add entry to books collection
+        return render_template('submitted.html')
+    except Exception as e:
+        print("Error in add_textbook:", e)
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 def upload_image(pic):
     blob = bucket.blob(pic.filename)
