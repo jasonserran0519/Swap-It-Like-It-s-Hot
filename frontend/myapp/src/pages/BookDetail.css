@@ -1,10 +1,52 @@
-.book-tile {
-    cursor: pointer;
-    text-decoration: none; /* Remove underline */
+.book-detail-container {
+    display: flex; /* Use flexbox for horizontal layout */
+    align-items: flex-start; /* Align items at the top */
+    justify-content: space-between; /* Space out the image and details */
+    padding: 20px;
   }
   
-  .book-tile:hover {
-    transform: scale(1.05); /* Add a hover effect */
-    transition: transform 0.2s;
+  .book-detail-image {
+    width: 50%; /* Adjust the width of the image */
+    max-width: 700px; /* Set a max width for the image */
+    height: auto;
+    border-radius: 8px; /* Optional: round the image corners */
+  }
+  
+  .book-detail-info {
+    width: 45%; /* Adjust the width for the details section */
+    padding-left: 20px; /* Space between image and details */
+  }
+  
+  .book-detail-info h2 {
+    font-size: 2rem; /* Make the book title larger */
+    margin-bottom: 20px;
+  }
+  
+  .book-detail-info p {
+    font-size: 1.2rem;
+    margin: 10px 0; /* Add spacing between paragraphs */
+  }
+  
+  .book-detail-info .price {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .book-detail-info .button-container {
+    margin-top: 20px;
+  }
+  
+  .book-detail-info button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #45a049;
+    color: white;
+    border: none;
+  }
+  
+  .book-detail-info button:hover {
+    background-color: #368036;
   }
   
