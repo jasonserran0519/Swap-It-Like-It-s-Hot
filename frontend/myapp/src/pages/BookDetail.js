@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import './BookDetail.css';
 
-function BookDetails() {
+function BookDetail() {
   const { id } = useParams();
   const [book, setBook] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state
 
   useEffect(() => {
-    const fetchBookDetails = async () => {
+    const fetchBookDetail = async () => {
       try {
         const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books/${id}`);
         if (!response.ok) {
@@ -16,7 +17,6 @@ function BookDetails() {
         }
         const data = await response.json();
         
-        // If data contains an error message from the backend
         if (data.error) {
           setError(data.error);
         } else {
@@ -30,7 +30,7 @@ function BookDetails() {
       }
     };
 
-    fetchBookDetails();
+    fetchBookDetail();
   }, [id]);
 
   if (loading) {
@@ -41,17 +41,30 @@ function BookDetails() {
     return <div>{error}</div>;  // Show error message if there's an issue
   }
 
+  const placeholderImage = `${process.env.PUBLIC_URL}/images/placeholder.png`;
+
   return (
-    <div>
-      <h2>{book.name}</h2>
-      <img src={book.pic} alt={book.name} />
-      <p>Author: {book.author}</p>
-      <p>Price: ${book.price}</p>
-      <p>Version: {book.version}</p>
-      <p>Course Number: {book.course_num}</p>
-      <p>Contact: {book.contact}</p>
+    <div className="book-detail-container">
+      <img 
+        src={book.pic ? book.pic : placeholderImage} 
+        alt={book.name} 
+        className="book-detail-image" 
+      />
+      <div className="book-detail-info">
+        <h2>{book.name}</h2>
+        <p>Author: {book.author}</p>
+        <p className="price">Price: ${book.price}</p>
+        <p>Version: {book.version}</p>
+        <p>Course Number: {book.course_num}</p>
+        <p>Contact: {book.contact}</p>
+
+        <div className="button-container">
+          <button>Add to Wishlist</button>
+          <button>Report Book</button>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default BookDetails;
+export default BookDetail;
