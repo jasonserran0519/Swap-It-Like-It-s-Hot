@@ -8,6 +8,8 @@ function Login() {
         <img src="images/silihLogo.png" alt="Logo" />
       </div>
       <div className="form-section">
+        <section>
+
         <h2>Sign In/ Sign Up</h2>
             <form>
             <div className="form-group">
@@ -16,6 +18,7 @@ function Login() {
             </div>
             <button type="submit">Login</button>
             </form>
+            </section>
       </div>
     </div>
   );

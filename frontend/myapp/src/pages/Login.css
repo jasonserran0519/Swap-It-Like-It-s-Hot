@@ -13,7 +13,8 @@
   
   .image-section img {
     max-width: 100%; 
-    height: auto; 
+    height: 50%; 
+    width: 50%  
   }
   
   .form-section {
@@ -42,6 +43,16 @@
     border: 1px solid #ccc; /* Border style */
     border-radius: 5px; /* Rounded corners */
   }
+
+  section {
+    border-radius: 8px;
+    margin-top: .5rem;
+    margin-bottom: .5rem; 
+    border: solid;
+    padding: 70px;
+    background-color: #D3D3D3;
+  }
+  
   
   button {
     background-color: orange; /* Button color */
