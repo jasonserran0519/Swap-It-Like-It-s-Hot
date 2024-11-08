@@ -42,8 +42,7 @@ function Navbar() {
             className="search-input"
           />
           <select value={category} onChange={handleCategoryChange} className="category-select">
-            <option value="">All Categories</option>
-            <option value="title">Title</option>
+            <option value="">Title</option>
             <option value="author">Author</option>
             <option value="isbn">ISBN</option>
             {/* Add more categories as needed */}
