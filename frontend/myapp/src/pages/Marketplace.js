@@ -12,7 +12,7 @@ function Dropdown() {
   
     return (
       <div>
-        <label htmlFor="dropdown">Sort by:</label>
+        <label htmlFor="dropdown">Sort by: </label>
         <select id="dropdown" value={selectedOption} onChange={handleChange}>
           <option value="">Price Low to High</option>
           <option value="option1">Price High to Low</option>
