@@ -1,13 +1,16 @@
 .book-detail-container {
     display: flex; /* Use flexbox for horizontal layout */
     align-items: flex-start; /* Align items at the top */
-    justify-content: space-between; /* Space out the image and details */
     padding: 20px;
+    margin: 20px;
+    margin-left: 60px;
+    margin-right: 60px;
+    gap: 40px;
   }
   
   .book-detail-image {
     width: 50%; /* Adjust the width of the image */
-    max-width: 700px; /* Set a max width for the image */
+    max-width: 600px; /* Set a max width for the image */
     height: auto;
     border-radius: 8px; /* Optional: round the image corners */
   }

@@ -120,7 +120,7 @@ function AddBook() {
 
                 <div className="form-buttons">
                     <button type="submit" className="form-submit">Submit</button>
-                    <button type="button" className="form-cancel" onClick={() => window.location.href = '/'}>Cancel</button>
+                    <button type="button" className="form-cancel" onClick={() => window.location.href = '/marketplace'}>Cancel</button>
                 </div>
             </form>
         </div>

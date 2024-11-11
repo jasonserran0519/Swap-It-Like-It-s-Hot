@@ -26,7 +26,7 @@ function Navbar() {
     <nav className="navbar">
       {/* Logo Section */}
       <div className="navbar-left">
-        <Link to="/" className="logo">
+        <Link to="/marketplace" className="logo">
           <img src="/images/silihLogo.png" alt="Logo" className="logo-image" />
         </Link>
       </div>
@@ -58,7 +58,7 @@ function Navbar() {
       </Link>
 
 
-        <Link to="/login" className="nav-link">Login</Link>
+        <Link to="/" className="nav-link">Logout</Link>
       </div>
     </nav>
   );
