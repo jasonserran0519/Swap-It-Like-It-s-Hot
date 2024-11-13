@@ -1,7 +1,7 @@
 // src/components/Navbar.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './Navbar.css'; // Make sure to link to the updated CSS
+import './Navbar.css';
 
 function Navbar() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -18,20 +18,16 @@ function Navbar() {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     console.log('Search for:', searchTerm, 'in category:', category);
-    // Implement search logic (e.g., redirect to search results)
   };
-
 
   return (
     <nav className="navbar">
-      {/* Logo Section */}
       <div className="navbar-left">
         <Link to="/marketplace" className="logo">
           <img src="/images/silihLogo.png" alt="Logo" className="logo-image" />
         </Link>
       </div>
 
-      {/* Search Section */}
       <div className="navbar-center">
         <form onSubmit={handleSearchSubmit} className="search-form">
           <input
@@ -45,18 +41,37 @@ function Navbar() {
             <option value="">Title</option>
             <option value="author">Author</option>
             <option value="isbn">ISBN</option>
-            {/* Add more categories as needed */}
           </select>
           <button type="submit" className="search-button">Search</button>
         </form>
       </div>
 
-      {/* Right Links */}
       <div className="navbar-right">
-      <Link to="/add-book" className="add-book-btn">
-        +
-      </Link>
+        {/* Wish List Button with Heart Icon */}
+        <Link to="/wishlist" className="wishlist-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="white"
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
+        </Link>
 
+        {/* Add Book Button with Plus Icon */}
+        <Link to="/add-book" className="add-book-btn">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="white"
+            viewBox="0 0 24 24"
+          >
+            <path d="M19 13H13v6h-2v-6H5v-2h6V5h2v6h6v2z" />
+          </svg>
+        </Link>
 
         <Link to="/" className="nav-link">Logout</Link>
       </div>
