@@ -38,3 +38,32 @@
 .clear-filters-btn:hover {
     background-color: #d32f2f; /* Darker red when hovered */
 }
+
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: normal;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.category-item.selected {
+    font-weight: bold;
+    color: #007bff; /* Change color when selected */
+}
+
+.category-item input[type="radio"] {
+    margin-right: 8px;
+    accent-color: #007bff; /* Style for the radio button */
+}
+
+.clear-filters-btn {
+    margin-top: 15px;
+}

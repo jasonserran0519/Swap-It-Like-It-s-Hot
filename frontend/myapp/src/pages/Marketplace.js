@@ -20,19 +20,38 @@ function Dropdown({ sortOption, setSortOption }) {
 }
 
 function Sidebar({ setCategory, sortOption, setSortOption, categories, clearFilters }) {
+    const [selectedCategory, setSelectedCategory] = useState('');
+
+    const handleCategoryChange = (category) => {
+        setSelectedCategory(category);
+        setCategory(category);
+    };
+
+    const handleClearFilters = () => {
+        setSelectedCategory(''); // Reset selected category
+        clearFilters();          // Call the external clearFilters function
+    };
+
     return (
         <div className="sidebar">
             <h2>Filters</h2>
             <Dropdown sortOption={sortOption} setSortOption={setSortOption} />
             <h3>Categories</h3>
-            <ul>
+            <div className="category-list">
                 {categories.map((category) => (
-                    <li key={category} onClick={() => setCategory(category)}>
+                    <label key={category} className={`category-item ${selectedCategory === category ? 'selected' : ''}`}>
+                        <input
+                            type="radio"
+                            name="category"
+                            value={category}
+                            checked={selectedCategory === category}
+                            onChange={() => handleCategoryChange(category)}
+                        />
                         {category}
-                    </li>
+                    </label>
                 ))}
-            </ul>
-            <button onClick={clearFilters} className="clear-filters-btn">Clear Filters</button> {/* Clear Filters Button */}
+            </div>
+            <button onClick={handleClearFilters} className="clear-filters-btn">Clear Filters</button>
         </div>
     );
 }
