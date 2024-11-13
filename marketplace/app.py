@@ -74,11 +74,15 @@ def add_book():
         contact = request.form.get('contact')
         #seller needs to be current user
 
-        pic = request.files.get('pic')
-        if pic:
-            pic_url = upload_image(pic)
-        else:
-            pic_url = None
+        image_urls = []
+        for i in range(1, 4):  # Expecting up to 3 images
+            pic = request.files.get(f'pic{i}')
+            if pic:
+                pic_url = upload_image(pic)
+                image_urls.append(pic_url)
+
+        if not image_urls:
+            image_urls = None
 
         # Create a dictionary to store the form data
         form_data = {
@@ -89,7 +93,7 @@ def add_book():
             'course_num': course_num,
             'price': float(price),
             'contact': contact,
-            'pic': pic_url
+            'pic': image_urls
         }
         db.collection('books').add(form_data)   # add entry to books collection
         return render_template('submitted.html')
