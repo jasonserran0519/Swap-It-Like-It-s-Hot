@@ -66,10 +66,11 @@ function Marketplace() {
                 {books.map((book) => (
                     <Link key={book.id} to={`/books/${book.id}`} className="book-tile">
                         <img 
-                            src={book.pic ? book.pic : placeholderImage} 
+                            src={book.pic && book.pic.length > 0 ? book.pic[0] : placeholderImage} 
                             alt={book.name} 
                             className="book-image" 
                         />
+
                         <div className="book-info">
                             <h2>{book.name}</h2>
                             <h3>{book.author}</h3>
