@@ -46,10 +46,10 @@ function BookDetail() {
   return (
     <div className="book-detail-container">
       <img 
-        src={book.pic ? book.pic : placeholderImage} 
-        alt={book.name} 
-        className="book-detail-image" 
-      />
+            src={book.pic && book.pic.length > 0 ? book.pic[0] : placeholderImage} 
+            alt={book.name} 
+            className="book-detail-image" 
+        />
       <div className="book-detail-info">
         <h2>{book.name}</h2>
         <p>Author: {book.author}</p>
