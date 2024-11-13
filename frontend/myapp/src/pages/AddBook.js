@@ -101,7 +101,7 @@ function AddBook() {
                         <p>Textbook Name<RequiredStar /></p>
                         <p>Author<RequiredStar /></p>
                         <p>Edition Number</p>
-                        <p>ISBN</p>
+                        <p>ISBN <RequiredStar /></p>
                         <p>Course Number<RequiredStar /></p>
                         <p>Price<RequiredStar /></p>
                         <p>Preferred Contact Information<RequiredStar /></p>
@@ -110,7 +110,7 @@ function AddBook() {
                         <input type="text" name="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
                         <input type="text" name="author" value={formData.author} onChange={(e) => setFormData({...formData, author: e.target.value})} required />
                         <input type="number" name="version" value={formData.version} onChange={(e) => setFormData({...formData, version: e.target.value})} />
-                        <input type="number" name="isbn" value={formData.isbn} onChange={(e) => setFormData({...formData, isbn: e.target.value})} />
+                        <input type="number" name="isbn" value={formData.isbn} onChange={(e) => setFormData({...formData, isbn: e.target.value})} required />
                         <input type="text" name="course_num" value={formData.course_num} onChange={(e) => setFormData({...formData, course_num: e.target.value})} required />
                         <input type="number" name="price" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} required />
                         <input type="text" name="contact" value={formData.contact} onChange={(e) => setFormData({...formData, contact: e.target.value})} required />
