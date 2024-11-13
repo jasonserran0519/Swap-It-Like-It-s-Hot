@@ -1,11 +1,13 @@
 // src/components/Navbar.js
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { auth } from '../../firebaseConfig'; // Ensure auth is correctly imported
 import './Navbar.css';
 
 function Navbar() {
   const [searchTerm, setSearchTerm] = useState('');
   const [category, setCategory] = useState('');
+  const navigate = useNavigate(); // Use navigate to redirect after logout
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
@@ -18,6 +20,14 @@ function Navbar() {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     console.log('Search for:', searchTerm, 'in category:', category);
+  };
+
+  const handleLogout = () => {
+    auth.signOut().then(() => {
+      navigate('/'); // Redirect to login page after sign-out
+    }).catch((error) => {
+      console.error("Logout Error:", error);
+    });
   };
 
   return (
@@ -73,7 +83,7 @@ function Navbar() {
           </svg>
         </Link>
 
-        <Link to="/" className="nav-link">Logout</Link>
+        <button onClick={handleLogout} className="nav-link logout-btn">Logout</button>
       </div>
     </nav>
   );
