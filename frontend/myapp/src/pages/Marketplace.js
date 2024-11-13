@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Marketplace.css';
-import { Link } from 'react-router-dom';
+import BookTile from '../components/Navbar/BookTile';
 
 function Dropdown({ sortOption, setSortOption }) {
     const handleChange = (event) => {
@@ -82,31 +82,13 @@ function Marketplace() {
         fetchCategories();
     }, []); // Only fetch course numbers once on initial load
 
-    const placeholderImage = `${process.env.PUBLIC_URL}/images/placeholder.png`;
 
     return (
         <div className="marketplace-container">
             <Sidebar setCategory={setCategory} sortOption={sortOption} setSortOption={setSortOption} categories={categories} clearFilters={clearFilters}/> 
             <div className="marketplace-grid">
-                {books.map((book) => (
-                    <Link key={book.id} to={`/books/${book.id}`} className="book-tile">
-                        <img 
-                            src={book.pic && book.pic.length > 0 ? book.pic[0] : placeholderImage} 
-                            alt={book.name} 
-                            className="book-image" 
-                        />
-
-                        <div className="book-info">
-                            <h2>{book.name}</h2>
-                            <h3>{book.author}</h3>
-                            <h3>
-                                ${new Intl.NumberFormat('en-US', {
-                                    minimumFractionDigits: 2,
-                                    maximumFractionDigits: 2,
-                                }).format(book.price)}
-                            </h3>
-                        </div>
-                    </Link>
+                {books.map((book, index) => (
+                    <BookTile book={book} key={index}/>
                 ))}
             </div>
         </div>

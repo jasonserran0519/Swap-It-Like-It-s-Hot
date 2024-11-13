@@ -46,15 +46,13 @@ function AddBook() {
         Object.keys(formData).forEach((key) => data.append(key, formData[key]));
         // Append images
         uploadedImages.forEach(({ file }, index) => data.append(`pic${index + 1}`, file));
-
         try {
             const response = await fetch('http://localhost:5000/added-book', {
                 method: 'POST',
                 body: data,
             });
-
             if (response.ok) {
-                window.location.href = '/submitted.html';
+                window.location.href = '/marketplace';  // Redirect to marketplace after successful submission
             } else {
                 const result = await response.json();
                 alert('Failed to add textbook: ' + result.error);
@@ -64,6 +62,7 @@ function AddBook() {
             alert('Error submitting form');
         }
     };
+    
 
     return (
         <div className="add-book-container">

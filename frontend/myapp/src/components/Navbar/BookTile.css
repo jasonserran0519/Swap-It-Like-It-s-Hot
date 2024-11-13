@@ -1,0 +1,58 @@
+.book-tile {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    overflow: hidden;
+    text-align: left;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    color: gray;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 320px; /* Slightly taller for more content space */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding-bottom: 10px; /* Adds padding at the bottom */
+}
+
+.book-tile:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.book-image {
+    width: 100%;
+    height: 65%; /* Keeps image size consistent within the tile */
+    object-fit: cover;
+}
+
+.book-info {
+    padding: 15px; /* Padding around the text for a cleaner look */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 35%; /* Increased height for more room for text */
+}
+
+.book-info h2 {
+    color: rgb(47, 47, 47);
+    margin: 4px 0;
+    font-size: 1.2rem;
+}
+
+.book-info h3 {
+    color: gray;
+    margin: 4px 0;
+    font-size: 1rem;
+}
+
+.book-info h3:last-child {
+    font-weight: bold; /* Makes the price stand out */
+    color: #333;
+}
+
+.book-tile:visited,
+.book-info h2:visited,
+.book-info h3:visited {
+    color: gray;
+    text-decoration: none;
+}

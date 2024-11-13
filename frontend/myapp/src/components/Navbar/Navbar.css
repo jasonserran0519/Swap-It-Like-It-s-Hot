@@ -66,7 +66,7 @@ nav.navbar {
 }
 
 .search-button:hover {
-    background-color: darkgoldenrod;
+    background-color: #d32f2f;
 }
 
 .navbar-right .nav-link {
@@ -76,7 +76,7 @@ nav.navbar {
 }
 
 .navbar-right .nav-link:hover {
-    background-color: darkgoldenrod;
+    background-color: #d32f2f;
     border-radius: 5px;
 }
 
@@ -96,6 +96,18 @@ nav.navbar {
 }
 
 .add-book-btn:hover, .wishlist-btn:hover {
-    background-color: darkgoldenrod;
+    background-color: #d32f2f;
+    border-radius: 50%;
+}
+
+.logo:hover {
+    transform: scale(1.05);
+    border-radius: 50%;
+    background-color: white;
+}
+
+.svg {
+    width:20px;
+    height:20px;
 }
 
