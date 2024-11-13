@@ -95,6 +95,7 @@ function Marketplace() {
                             alt={book.name} 
                             className="book-image" 
                         />
+
                         <div className="book-info">
                             <h2>{book.name}</h2>
                             <h3>{book.author}</h3>
