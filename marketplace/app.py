@@ -100,6 +100,7 @@ def search_books():
     name = request.args.get('name', '').lower()  # Get the search term and convert to lowercase
     author = request.args.get('author')
     course_num = request.args.get('course_num')
+    isbn = request.args.get('isbn')
 
     # Apply filters based on available parameters
     if name:
@@ -110,9 +111,9 @@ def search_books():
     
     if author:
         query = query.where('author', '==', author)
-
-    if course_num:
-        query = query.where('course_num', '==', course_num)
+    
+    if isbn:
+        query = query.where('isbn', '==', isbn)
 
     # Retrieve and format results
     results = []
