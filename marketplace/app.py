@@ -12,11 +12,11 @@ bucket=storage.bucket()
 
 CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 
-# home page, this is not working
+# home page
 @app.route('/')
 def index():
-    #if not g.user:
-    #    return redirect(url_for('auth.login'))
+    if not g.user:
+        return redirect(url_for('auth.login'))
     books_ref = db.collection('books')
     books = [doc.to_dict() for doc in books_ref.stream()]
     return render_template('index_copy.html', books=books)
@@ -90,6 +90,38 @@ def view_book(book_id):
 @app.route('/add-book')
 def book_form():
     return render_template('newpost.html')
+
+@app.route('/search', methods=['GET'])
+def search_books():
+    books_ref = db.collection('books')
+    query = books_ref
+
+    # Get query parameters from the request
+    name = request.args.get('name', '').lower()  # Get the search term and convert to lowercase
+    author = request.args.get('author')
+    course_num = request.args.get('course_num')
+
+    # Apply filters based on available parameters
+    if name:
+        # Firestore does not support partial text matching by default.
+        # For exact matching, you can use equality:
+        query = [book for book in query if name in book['name'].lower()]
+        # For partial text matching, consider using Firestore's full-text search solutions like Algolia.
+    
+    if author:
+        query = query.where('author', '==', author)
+
+    if course_num:
+        query = query.where('course_num', '==', course_num)
+
+    # Retrieve and format results
+    results = []
+    for doc in query.stream():
+        book_data = doc.to_dict()
+        book_data['id'] = doc.id
+        results.append(book_data)
+
+    return jsonify(results)
 
 # form submitted
 @app.route('/added-book', methods=['POST'])
