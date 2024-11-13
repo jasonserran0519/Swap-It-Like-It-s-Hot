@@ -91,6 +91,33 @@ def view_book(book_id):
 def book_form():
     return render_template('newpost.html')
 
+
+# Add to wishlist function
+@app.route('/add_wishlist/<book_id>', methods=['POST'])
+def add_to_wishlist(book_id):
+    # Checking the user to make sure they are signed in
+    user_id = g.user["id"] 
+    if not user_id:
+        return jsonify({"message": "User not authenticated"}), 401
+
+    wishlist_ref = db.collection("users").document(user_id).collection("wishlist")
+
+    # checking if the book is already in the wishlist for the user
+    books_doc = wishlist_ref.document(book_id).get()
+    if book_doc.exists:
+        return jsonify({"message": "Book already in wishlist:"}), 200
+
+    # actually adding the book to wishlist
+    wishlist_ref.document(book_id).set({
+        "book_ref": f"/books/{book_id}"
+    })
+
+    return jsonify({"message": "Book added to wishlist"}), 200
+
+     
+
+
+
 @app.route('/search', methods=['GET'])
 def search_books():
     books_ref = db.collection('books')

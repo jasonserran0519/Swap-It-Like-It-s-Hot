@@ -7,6 +7,7 @@ function BookDetail() {
   const [book, setBook] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true); // Add loading state
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchBookDetail = async () => {
@@ -32,6 +33,31 @@ function BookDetail() {
 
     fetchBookDetail();
   }, [id]);
+
+
+  // handleAddToWishlist
+  const handleAddToWishlist = async () => {
+    try {
+      const response = await fetch('${process.env.REACT_APP_BACKEND_URL}/add_wishlist/${id}',{
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type' : 'application/json'
+        },
+      });
+
+      if(!response.ok){
+        throw new Error('HTTP erros! Status: ${response.status}');
+      }
+
+      const result= await response.json();
+      setMessage(result.message || 'Book added to wishlist!');
+
+    } catch (error) {
+      console.error('Error adding to the wishlist', error);
+      setMessage('Failed to add book to the wishlist.');
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -59,9 +85,11 @@ function BookDetail() {
         <p>Contact: {book.contact}</p>
 
         <div className="button-container">
-          <button>Add to Wishlist</button>
+          <button onClick={handleAddToWishlist}>Add to Wishlist</button>
           <button>Report Book</button>
         </div>
+
+        {message && <p className='message'>{message}</p>}
       </div>
     </div>
   );
