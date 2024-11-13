@@ -45,7 +45,7 @@ function BookDetail() {
 
   return (
     <div className="book-detail-container">
-        <img 
+      <img 
             src={book.pic && book.pic.length > 0 ? book.pic[0] : placeholderImage} 
             alt={book.name} 
             className="book-detail-image" 
