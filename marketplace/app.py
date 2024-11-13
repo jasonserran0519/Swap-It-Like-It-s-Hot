@@ -37,12 +37,43 @@ def index():
 @app.route('/books', methods=['GET'])
 def get_books():
     books_ref = db.collection('books')
+
+    category = request.args.get('category')
+    if category:
+        books_ref = books_ref.where('course_num', '==', category)
+
     books = []
     for doc in books_ref.stream():
         book_data = doc.to_dict()
         book_data['id'] = doc.id  # Add the document ID to each book's data
         books.append(book_data)
+    
+    # Handle sorting by price
+    sort_option = request.args.get('sort')
+    if sort_option == 'low_to_high':
+        books = sorted(books, key=lambda x: float(x.get('price', 0)))
+    elif sort_option == 'high_to_low':
+        books = sorted(books, key=lambda x: float(x.get('price', 0)), reverse=True)
+
     return jsonify(books)
+
+@app.route('/course_numbers', methods=['GET'])
+def get_course_numbers():
+    books_ref = db.collection('books')
+
+    # Retrieve all documents in the collection
+    books = books_ref.stream()
+
+    # Extract unique course numbers
+    course_numbers = set()
+    for doc in books:
+        book_data = doc.to_dict()
+        course_num = book_data.get('course_num')
+        if course_num:
+            course_numbers.add(course_num)
+
+    # Return the list of unique course numbers
+    return jsonify(list(course_numbers))
 
 # view selected book
 @app.route('/books/<book_id>', methods=['GET'])

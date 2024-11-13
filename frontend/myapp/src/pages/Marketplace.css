@@ -81,3 +81,18 @@
     color: gray;
     text-decoration: none;
 }
+
+.clear-filters-btn {
+    background-color: #f44336; /* Red color */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.clear-filters-btn:hover {
+    background-color: #d32f2f; /* Darker red when hovered */
+}
