@@ -26,7 +26,7 @@ function Navbar() {
     <nav className="navbar">
       {/* Logo Section */}
       <div className="navbar-left">
-        <Link to="/" className="logo">
+        <Link to="/marketplace" className="logo">
           <img src="/images/silihLogo.png" alt="Logo" className="logo-image" />
         </Link>
       </div>
@@ -42,8 +42,7 @@ function Navbar() {
             className="search-input"
           />
           <select value={category} onChange={handleCategoryChange} className="category-select">
-            <option value="">All Categories</option>
-            <option value="title">Title</option>
+            <option value="">Title</option>
             <option value="author">Author</option>
             <option value="isbn">ISBN</option>
             {/* Add more categories as needed */}
@@ -59,7 +58,7 @@ function Navbar() {
       </Link>
 
 
-        <Link to="/login" className="nav-link">Login</Link>
+        <Link to="/" className="nav-link">Logout</Link>
       </div>
     </nav>
   );
