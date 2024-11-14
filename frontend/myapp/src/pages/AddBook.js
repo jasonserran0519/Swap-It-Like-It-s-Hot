@@ -114,7 +114,7 @@ function AddBook() {
                         <input type="text" name="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
                         <input type="text" name="author" value={formData.author} onChange={(e) => setFormData({...formData, author: e.target.value})} required />
                         <input type="number" name="version" value={formData.version} onChange={(e) => setFormData({...formData, version: e.target.value})} />
-                        <input type="number" name="isbn" value={formData.isbn} onChange={(e) => setFormData({...formData, isbn: e.target.value})} />
+                        <input type="number" name="isbn" value={formData.isbn} onChange={(e) => setFormData({...formData, isbn: e.target.value})} required />
                         <input type="text" name="course_num" value={formData.course_num} onChange={(e) => setFormData({...formData, course_num: e.target.value})} required />
                         <input type="number" name="price" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} required />
                         <select name="condition" value={formData.condition} onChange={(e) => setFormData({...formData, condition: e.target.value})} required>
