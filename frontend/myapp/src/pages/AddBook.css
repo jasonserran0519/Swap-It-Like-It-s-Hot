@@ -102,6 +102,14 @@
     font-size: 1rem;
 }
 
+.fields-forms-container select,
+.fields-forms-container textarea {
+    width: 100%;
+    max-width: 500px;
+    padding: 8px;
+    margin-bottom: 8px;
+}
+
 .trash-can {
     position: absolute;
     bottom: 8px;
