@@ -83,7 +83,7 @@ function Navbar() {
           </svg>
         </Link>
 
-        <button onClick={handleLogout} className="nav-link logout-btn">Logout</button>
+        <button onClick={handleLogout} className="logout-btn">Logout</button>
       </div>
     </nav>
   );
