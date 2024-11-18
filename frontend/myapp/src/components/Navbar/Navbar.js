@@ -1,15 +1,13 @@
-// src/components/Navbar.js
-// src/components/Navbar.js
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../../firebaseConfig'; // Ensure auth is correctly imported
 import './Navbar.css';
 
-function Navbar({ setSearchResults }) {  // Accept `setSearchResults` as a prop
+function Navbar({ setSearchResults }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [category, setCategory] = useState('');
     const [error, setError] = useState(null);
-    const navigate = useNavigate();  // Use navigate to redirect after logout
+    const navigate = useNavigate();
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -22,11 +20,15 @@ function Navbar({ setSearchResults }) {  // Accept `setSearchResults` as a prop
     const performSearch = async (query, category) => {
         try {
             const response = await fetch(`http://127.0.0.1:5000/search?name=${query}&course_num=${category}`);
-            if (!response.ok) throw new Error("Failed to fetch search results");
+            if (!response.ok) throw new Error(`Failed to fetch search results: ${response.statusText}`);
 
             const data = await response.json();
             setSearchResults(data);  // Pass search results to Marketplace.js via prop
-            setError(null);  // Clear any previous errors
+            setError(null);           // Clear any previous errors
+
+            // Reset search input fields after search
+            setSearchTerm('');
+            setCategory('');
         } catch (error) {
             console.error("Error fetching search results:", error);
             setError("Failed to fetch search results. Please try again.");
@@ -35,8 +37,19 @@ function Navbar({ setSearchResults }) {  // Accept `setSearchResults` as a prop
 
     const handleSearchSubmit = (event) => {
         event.preventDefault();
+        if (!searchTerm.trim()) {
+            setError("Please enter a search term");
+            return;
+        }
         performSearch(searchTerm, category);
         console.log('Search for:', searchTerm, 'in category:', category);
+    };
+
+    const handleResetSearch = () => {
+        setSearchTerm('');         // Clear the search term input
+        setCategory('');           // Clear the selected category
+        setSearchResults([]);      // Reset the search results to an empty array
+        setError(null);            // Reset any error message
     };
 
     const handleLogout = () => {
@@ -70,6 +83,7 @@ function Navbar({ setSearchResults }) {  // Accept `setSearchResults` as a prop
                         <option value="isbn">ISBN</option>
                     </select>
                     <button type="submit" className="search-button">Search</button>
+                    <button type="button" onClick={handleResetSearch} className="reset-button">Reset</button> {/* Reset button */}
                 </form>
                 {error && <div className="error-message">{error}</div>}
             </div>

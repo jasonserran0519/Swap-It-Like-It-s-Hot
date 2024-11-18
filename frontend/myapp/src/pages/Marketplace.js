@@ -122,4 +122,5 @@ function Marketplace({ searchResults }) {
         </div>
     );
 }
+
 export default Marketplace;

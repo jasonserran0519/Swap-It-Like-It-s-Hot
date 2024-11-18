@@ -119,3 +119,15 @@ nav.navbar {
     height:20px;
 }
 
+
+.reset-button {
+    background-color:  darkorange;  /* Light background for the reset button */
+    border: none;     /* Border to match the search button style */
+    margin-left: 10px;           /* Space between search and reset button */
+    padding: 5px 10px;           /* Padding for the button */
+    cursor: pointer;            /* Pointer cursor to indicate it's clickable */
+}
+
+.reset-button:hover {
+    background-color: #d32f2f; /* Slightly darker background on hover */
+}

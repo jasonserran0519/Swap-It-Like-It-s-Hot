@@ -64,4 +64,5 @@ function AppContent({ searchResults, setSearchResults }) {
     </div>
   );
 }
+
 export default App;
