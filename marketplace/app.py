@@ -114,36 +114,39 @@ def add_to_wishlist(book_id):
     return jsonify({"message": "Book added to wishlist"}), 200
 
 @app.route('/search', methods=['GET'])
+
 def search_books():
     books_ref = db.collection('books')
-    query = books_ref
-
-    # Get query parameters from the request
-    name = request.args.get('name', '').lower()  # Get the search term and convert to lowercase
+    
+    # Get query parameters
+    name = request.args.get('name', '').lower()
     author = request.args.get('author')
     isbn = request.args.get('isbn')
 
-    # Apply filters based on available parameters
-    if name:
-        # Firestore does not support partial text matching by default.
-        # For exact matching, you can use equality:
-        query = [book for book in query if name in book['name'].lower()]
-        # For partial text matching, consider using Firestore's full-text search solutions like Algolia.
-    
+    # Apply Firestore filters first
     if author:
+<<<<<<< Updated upstream
         query = query.where('author', '==', author)
     
     if isbn:
         query = query.where('isbn', '==', isbn)
+=======
+        books_ref = books_ref.where('author', '==', author)
+    if course_num:
+        books_ref = books_ref.where('course_num', '==', course_num)
+>>>>>>> Stashed changes
 
-    # Retrieve and format results
+    # Retrieve and apply `name` filtering in Python
     results = []
-    for doc in query.stream():
+    for doc in books_ref.stream():
         book_data = doc.to_dict()
-        book_data['id'] = doc.id
-        results.append(book_data)
+        # Check for partial match with name if provided
+        if not name or name in book_data.get('name', '').lower():
+            book_data['id'] = doc.id
+            results.append(book_data)
 
     return jsonify(results)
+
 
 # form submitted
 @app.route('/added-book', methods=['POST'])

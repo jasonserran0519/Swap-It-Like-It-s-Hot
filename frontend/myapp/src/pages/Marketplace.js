@@ -1,3 +1,4 @@
+// src/pages/Marketplace.js
 import React, { useState, useEffect } from 'react';
 import './Marketplace.css';
 import BookTile from '../components/Navbar/BookTile';
@@ -11,8 +12,8 @@ function Dropdown({ sortOption, setSortOption }) {
         <div>
             <label htmlFor="dropdown">Sort by: </label>
             <select id="dropdown" value={sortOption} onChange={handleChange}>
-            <option value="relevant">Most Relevant</option>
-            <option value="low_to_high">Price Low to High</option>
+                <option value="relevant">Most Relevant</option>
+                <option value="low_to_high">Price Low to High</option>
                 <option value="high_to_low">Price High to Low</option>
             </select>
         </div>
@@ -28,8 +29,8 @@ function Sidebar({ setCategory, sortOption, setSortOption, categories, clearFilt
     };
 
     const handleClearFilters = () => {
-        setSelectedCategory(''); // Reset selected category
-        clearFilters();          // Call the external clearFilters function
+        setSelectedCategory('');
+        clearFilters();
     };
 
     return (
@@ -56,58 +57,66 @@ function Sidebar({ setCategory, sortOption, setSortOption, categories, clearFilt
     );
 }
 
-function Marketplace() {
+function Marketplace({ searchResults }) {
     const [books, setBooks] = useState([]);
     const [sortOption, setSortOption] = useState('relevant');
     const [category, setCategory] = useState('');
-    const [categories, setCategories] = useState([]); // Store the list of categories
+    const [categories, setCategories] = useState([]);
 
     const clearFilters = () => {
         setCategory('');
         setSortOption('relevant');
+        setBooks([]);  // Clear books if searchResults are cleared
     };
 
     useEffect(() => {
-        // Fetch books when sortOption, category or courseNum changes
-        const fetchBooks = async () => {
-            try {
-                const query = new URLSearchParams();
-                if (sortOption) query.append('sort', sortOption);
-                if (category) query.append('category', category);  // Send category filter
+        if (!searchResults || searchResults.length === 0) {
+            fetchBooks();
+        } else {
+            setBooks(searchResults);  // Use searchResults directly if available
+        }
+    }, [sortOption, category, searchResults]);  // Avoid refetching if searchResults are available
 
-                const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books?${query.toString()}`);
-                const data = await response.json();
-                setBooks(data);
-            } catch (error) {
-                console.error("Error fetching books:", error);
-            }
-        };
+    const fetchBooks = async () => {
+        try {
+            const query = new URLSearchParams();
+            if (sortOption) query.append('sort', sortOption);
+            if (category) query.append('category', category);
 
-        fetchBooks();
-    }, [sortOption, category]);
+            const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/books?${query.toString()}`);
+            const data = await response.json();
+            setBooks(data);
+        } catch (error) {
+            console.error("Error fetching books:", error);
+        }
+    };
 
-    // Fetch course numbers dynamically
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/course_numbers`);
                 const data = await response.json();
-                setCategories(data); // Set the course numbers in state
+                setCategories(data);
             } catch (error) {
                 console.error("Error fetching course numbers:", error);
             }
         };
 
         fetchCategories();
-    }, []); // Only fetch course numbers once on initial load
-
+    }, []);
 
     return (
         <div className="marketplace-container">
-            <Sidebar setCategory={setCategory} sortOption={sortOption} setSortOption={setSortOption} categories={categories} clearFilters={clearFilters}/> 
+            <Sidebar
+                setCategory={setCategory}
+                sortOption={sortOption}
+                setSortOption={setSortOption}
+                categories={categories}
+                clearFilters={clearFilters}
+            />
             <div className="marketplace-grid">
-                {books.map((book, index) => (
-                    <BookTile book={book} key={index}/>
+                {(searchResults && searchResults.length > 0 ? searchResults : books).map((book, index) => (
+                    <BookTile book={book} key={index} />
                 ))}
             </div>
         </div>
