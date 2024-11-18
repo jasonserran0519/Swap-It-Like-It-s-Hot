@@ -39,25 +39,6 @@ function Navbar({ setSearchResults }) {  // Accept `setSearchResults` as a prop
         console.log('Search for:', searchTerm, 'in category:', category);
     };
 
-<<<<<<< Updated upstream
-      <div className="navbar-center">
-        <form onSubmit={handleSearchSubmit} className="search-form">
-          <input
-            type="text"
-            placeholder="Search..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="search-input"
-          />
-          <select value={category} onChange={handleCategoryChange} className="category-select">
-            <option value="name">Title</option>
-            <option value="author">Author</option>
-            <option value="isbn">ISBN</option>
-          </select>
-          <button type="submit" className="search-button">Search</button>
-        </form>
-      </div>
-=======
     const handleLogout = () => {
         auth.signOut().then(() => {
             navigate('/'); // Redirect to login page after sign-out
@@ -65,7 +46,6 @@ function Navbar({ setSearchResults }) {  // Accept `setSearchResults` as a prop
             console.error("Logout Error:", error);
         });
     };
->>>>>>> Stashed changes
 
     return (
         <nav className="navbar">
@@ -94,12 +74,6 @@ function Navbar({ setSearchResults }) {  // Accept `setSearchResults` as a prop
                 {error && <div className="error-message">{error}</div>}
             </div>
 
-<<<<<<< Updated upstream
-        <button onClick={handleLogout} className="logout-btn">Logout</button>
-      </div>
-    </nav>
-  );
-=======
             <div className="navbar-right">
                 <Link to="/wishlist" className="wishlist-btn">
                     <svg width="20" height="20" fill="white" viewBox="0 0 24 24">
@@ -115,7 +89,6 @@ function Navbar({ setSearchResults }) {  // Accept `setSearchResults` as a prop
             </div>
         </nav>
     );
->>>>>>> Stashed changes
 }
 
 export default Navbar;
