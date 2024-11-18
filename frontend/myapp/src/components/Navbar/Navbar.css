@@ -81,7 +81,7 @@ nav.navbar {
     border-radius: 5px;
 }
 
-.add-book-btn, .wishlist-btn {
+.add-book-btn, .wishlist-btn, .profile-btn {
     background-color: darkorange;
     color: white;
     text-decoration: none;
@@ -95,7 +95,7 @@ nav.navbar {
     font-size: 20px;
 }
 
-.add-book-btn:hover, .wishlist-btn:hover {
+.add-book-btn:hover, .wishlist-btn:hover, .profile-btn:hover {
     background-color: #d32f2f;
     border-radius: 50%;
 }
@@ -104,14 +104,6 @@ nav.navbar {
     transform: scale(1.05);
     border-radius: 50%;
     background-color: white;
-}
-
-.logout-btn {
-    background-color: darkorange;
-}
-
-.logout-btn:hover {
-    background-color: #d32f2f;
 }
 
 .svg {
@@ -128,6 +120,31 @@ nav.navbar {
     cursor: pointer;            /* Pointer cursor to indicate it's clickable */
 }
 
-.reset-button:hover {
-    background-color: #d32f2f; /* Slightly darker background on hover */
+.profile-dropdown {
+    position: relative;
+}
+
+.dropdown-menu {
+    position: absolute;
+    right: 0;
+    background-color: #fff;
+    color: #000;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    top: 100%;
+    width: 150px;
+    display: flex;
+    flex-direction: column;
+}
+
+.dropdown-item {
+    padding: 10px;
+    text-decoration: none;
+    color: black;
+    font-size: 14px;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f1f1;
+    color: #333;
 }

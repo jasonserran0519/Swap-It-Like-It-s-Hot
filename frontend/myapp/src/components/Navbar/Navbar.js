@@ -7,6 +7,7 @@ function Navbar({ setSearchResults }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [category, setCategory] = useState('');
     const [error, setError] = useState(null);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);  // State for dropdown visibility
     const navigate = useNavigate();
 
     const handleSearchChange = (event) => {
@@ -60,6 +61,10 @@ function Navbar({ setSearchResults }) {
         });
     };
 
+    const toggleDropdown = () => {
+        setIsDropdownOpen((prev) => !prev);
+    };
+
     return (
         <nav className="navbar">
             <div className="navbar-left">
@@ -99,7 +104,22 @@ function Navbar({ setSearchResults }) {
                         <path d="M19 13H13v6h-2v-6H5v-2h6V5h2v6h6v2z" />
                     </svg>
                 </Link>
-                <button onClick={handleLogout} className="nav-link logout-btn">Logout</button>
+
+                {/* Profile button with circular icon and dropdown */}
+                <div className="profile-dropdown">
+                    <button onClick={toggleDropdown} className="profile-btn">
+                        {/* Profile Icon (SVG) */}
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                        </svg>
+                    </button>
+                    {isDropdownOpen && (
+                        <div className="dropdown-menu">
+                            <Link to="/my-listings" className="dropdown-item">My Listings</Link>
+                            <button onClick={handleLogout} className="dropdown-item">Logout</button>
+                        </div>
+                    )}
+                </div>
             </div>
         </nav>
     );
