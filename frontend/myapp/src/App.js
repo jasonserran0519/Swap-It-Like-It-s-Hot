@@ -1,5 +1,5 @@
 // App.js
-import React, { useState } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Marketplace from './pages/Marketplace';
 import BookDetail from './pages/BookDetail';
@@ -10,52 +10,43 @@ import useAuth from './hooks/useAuth'; // Import the custom hook to get auth sta
 import './App.css';
 
 function App() {
-  const [searchResults, setSearchResults] = useState([]);  // State for storing search results
-
   return (
     <Router>
-      <AppContent 
-        searchResults={searchResults} 
-        setSearchResults={setSearchResults} 
-      />
+      <AppContent />
     </Router>
   );
 }
 
-function AppContent({ searchResults, setSearchResults }) {
+function AppContent() {
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuth(); // Check if user is authenticated
   const isLoginPage = location.pathname === '/';
 
   return (
     <div>
       {/* Render Navbar only if not on the login page */}
-      {!isLoginPage && (
-        <Navbar setSearchResults={setSearchResults} />  // Pass setSearchResults to Navbar
-      )}
+      {!isLoginPage && <Navbar />}
 
       <Routes>
+        {/* Redirect to Marketplace if logged in, otherwise show Login */}
         <Route
           path="/"
           element={isAuthenticated ? <Navigate to="/marketplace" /> : <Login />}
         />
         
+        {/* Protect Marketplace route: redirect to Login if not authenticated */}
         <Route
           path="/marketplace"
-          element={
-            isAuthenticated ? (
-              <Marketplace searchResults={searchResults} />  // Pass searchResults to Marketplace
-            ) : (
-              <Navigate to="/" />
-            )
-          }
+          element={isAuthenticated ? <Marketplace /> : <Navigate to="/" />}
         />
 
+        {/* Protect AddBook route */}
         <Route
           path="/add-book"
           element={isAuthenticated ? <AddBook /> : <Navigate to="/" />}
         />
 
+        {/* Protect BookDetail route */}
         <Route
           path="/books/:id"
           element={isAuthenticated ? <BookDetail /> : <Navigate to="/" />}
