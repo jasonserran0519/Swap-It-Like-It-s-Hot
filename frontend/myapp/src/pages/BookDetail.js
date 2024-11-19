@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { auth } from '../firebaseConfig';
 import './BookDetail.css';
 
 function BookDetail() {
@@ -37,27 +38,55 @@ function BookDetail() {
 
   // handleAddToWishlist
   const handleAddToWishlist = async () => {
+    const userId = auth.currentUser.uid;
+    if (!userId) {
+      setMessage("You must be logged in to add listings to your wishlist.");
+      return;
+    }
+
+  
     try {
-      const response = await fetch('${process.env.REACT_APP_BACKEND_URL}/add_wishlist/${id}',{
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type' : 'application/json'
-        },
-      });
-
-      if(!response.ok){
-        throw new Error('HTTP erros! Status: ${response.status}');
+      console.log("User ID:", userId);
+      console.log("Book ID:", id);
+      
+      const data = {
+        User_ID: userId,
+        Book_ID: id,
       }
-
-      const result= await response.json();
-      setMessage(result.message || 'Book added to wishlist!');
-
+      // Sending the data over to the Flask backend
+      const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/add_to_wishlist`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data), 
+      });
+  
+      // Log response status
+      console.log("Response status:", response.status);
+  
+      // Check if the response is okay
+      if (!response.ok) {
+        console.error("Failed to add book to wishlist: ", response.statusText);
+        setMessage('Failed to add book to wishlist.');
+        return;
+      }
+  
+      // Response from Flask
+      const result = await response.json();
+      console.log("Response from backend:", result);
+  
+      if (result.message) {
+        setMessage(result.message || 'Book added to wishlist successfully!');
+      } else {
+        setMessage(result.error || 'Failed to add book to wishlist.');
+      }
     } catch (error) {
-      console.error('Error adding to the wishlist', error);
-      setMessage('Failed to add book to the wishlist.');
+      console.error('Could not add to wishlist:', error);
+      setMessage('An error occurred. Please try again later.');
     }
   };
+  
 
   if (loading) {
     return <div>Loading...</div>;
