@@ -9,7 +9,9 @@ function AddBook() {
         isbn: '',
         course_num: '',
         price: '',
+        condition: '',
         contact: '',
+        description: '',
     });
     const [uploadedImages, setUploadedImages] = useState([]); // Array to hold image files
 
@@ -101,19 +103,28 @@ function AddBook() {
                         <p>Textbook Name<RequiredStar /></p>
                         <p>Author<RequiredStar /></p>
                         <p>Edition Number</p>
-                        <p>ISBN</p>
+                        <p>ISBN<RequiredStar /></p>
                         <p>Course Number<RequiredStar /></p>
                         <p>Price<RequiredStar /></p>
+                        <p>Condition<RequiredStar /></p> {/* New Field for Book Condition */}
                         <p>Preferred Contact Information<RequiredStar /></p>
+                        <p>Description</p> {/* New Field for Description */}
                     </div>
                     <div className="fields-forms-container">
                         <input type="text" name="name" value={formData.name} onChange={(e) => setFormData({...formData, name: e.target.value})} required />
                         <input type="text" name="author" value={formData.author} onChange={(e) => setFormData({...formData, author: e.target.value})} required />
                         <input type="number" name="version" value={formData.version} onChange={(e) => setFormData({...formData, version: e.target.value})} />
-                        <input type="number" name="isbn" value={formData.isbn} onChange={(e) => setFormData({...formData, isbn: e.target.value})} />
+                        <input type="number" name="isbn" value={formData.isbn} onChange={(e) => setFormData({...formData, isbn: e.target.value})} required />
                         <input type="text" name="course_num" value={formData.course_num} onChange={(e) => setFormData({...formData, course_num: e.target.value})} required />
                         <input type="number" name="price" value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})} required />
+                        <select name="condition" value={formData.condition} onChange={(e) => setFormData({...formData, condition: e.target.value})} required>
+                            <option value="">Select Condition</option>
+                            <option value="Excellent">Excellent</option>
+                            <option value="Good">Good</option>
+                            <option value="Poor">Poor</option>
+                        </select>
                         <input type="text" name="contact" value={formData.contact} onChange={(e) => setFormData({...formData, contact: e.target.value})} required />
+                        <textarea name="description" value={formData.description} onChange={(e) => setFormData({...formData, description: e.target.value})} maxLength="500" placeholder="Description (max 500 characters)" />
                     </div>
                 </div>
 
