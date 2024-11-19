@@ -71,14 +71,14 @@ function BookDetail() {
       <div className="book-detail-info">
         <div className="book-detail-info-left">
           <h2>{book.name}</h2>
-          <p>Author: {book.author}</p>
-          <p>Edition: {book.version}</p>
-          <p>ISBN: {book.isbn}</p>
+          <p><strong>Author: </strong>{book.author}</p>
+          <p><strong>Edition: </strong>{book.version}</p>
+          <p><strong>ISBN: </strong>{book.isbn}</p>
           <br></br>
-          <p>Course Number: {book.course_num}</p>
+          <p><strong>Course Number: </strong>{book.course_num}</p>
           <br></br>
-          <p>Condition: {book.condition || 'Not specified'}</p>
-          <p>Additional Details: {book.description|| 'No additional details'}</p>
+          <p><strong>Condition: </strong>{book.condition || 'Not specified'}</p>
+          <p><strong>Additional Details: </strong>{book.description|| 'No additional details'}</p>
         </div>
         
         <div className="book-detail-info-right">
