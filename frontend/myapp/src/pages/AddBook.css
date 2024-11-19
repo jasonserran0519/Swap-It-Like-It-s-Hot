@@ -73,8 +73,9 @@
 
 /* Label styling with required star next to label text */
 .fields-names-container p {
+    height: 36px;
     font-weight: bold;
-    margin: 10px 0;
+    margin-bottom: 8px;
     display: flex;
     align-items: center;
     text-align: left;
@@ -93,6 +94,7 @@
 /* Input field styling */
 .fields-forms-container input[type="text"],
 .fields-forms-container input[type="number"] {
+    height: 36px;
     width: 100%;
     max-width: 500px;
     padding: 8px;
@@ -102,7 +104,14 @@
     font-size: 1rem;
 }
 
-.fields-forms-container select,
+.fields-forms-container select {
+    height: 36px;
+    width: 100%;
+    max-width: 500px;
+    padding: 8px;
+    margin-bottom: 8px;
+}
+
 .fields-forms-container textarea {
     width: 100%;
     max-width: 500px;
