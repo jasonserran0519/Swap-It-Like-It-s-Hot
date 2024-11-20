@@ -157,8 +157,8 @@ def search_books():
     except Exception as e:
         print(f"Error in search: {e}")
         return jsonify({'error': 'An error occurred while searching for books'}), 500
-   
-    
+
+
 @app.route('/search', methods=['GET'])
 def search():
     return search_books()
@@ -171,14 +171,14 @@ def search():
 @app.route('/add_user', methods=['POST'])
 def adding_user():
     try:
-        # Get user data from the frontend (JSON body)
         user_data = request.json
         
         # Check if all necessary data is provided
         if not user_data.get('uid') or not user_data.get('displayName') or not user_data.get('email'):
             return jsonify({"error": "Missing required user data"}), 400
         
-        # Add the user to Firestore
+        # Add the user to Firestore users collection, with the same document name as the uid
+        # set apparently resets documents if they have already been created
         user_ref = db.collection('users').document(user_data['uid'])
         user_ref.set({
             'uid': user_data['uid'],
@@ -186,6 +186,7 @@ def adding_user():
             'email': user_data['email'],
         })
         
+
         return jsonify({"message": "User added successfully"}), 200
     except Exception as e:
         # Log the exception for debugging purposes
@@ -223,69 +224,10 @@ def get_wishlist():
         print(f"Error fetching wishlist: {e}")
         return jsonify({'error': 'Failed to fetch wishlist'}), 500
 
-
-
-
-#adding user after they sign in
-@app.route('/add_user', methods=['POST'])
-def adding_user():
-    try:
-        # Get user data from the frontend (JSON body)
-        user_data = request.json
-        
-        # Check if all necessary data is provided
-        if not user_data.get('uid') or not user_data.get('displayName') or not user_data.get('email'):
-            return jsonify({"error": "Missing required user data"}), 400
-        
-        # Add the user to Firestore
-        user_ref = db.collection('users').document(user_data['uid'])
-        user_ref.set({
-            'uid': user_data['uid'],
-            'displayName': user_data['displayName'],
-            'email': user_data['email'],
-        })
-        
-        return jsonify({"message": "User added successfully"}), 200
-    except Exception as e:
-        # Log the exception for debugging purposes
-        print(f"Error adding user: {e}")
-        return jsonify({"error": "Failed to add user"}), 500
-
-@app.route('/get_wishlist', methods=['GET'])
-def get_wishlist():
-    try:
-        # Get the user ID from the query parameter
-        user_id = request.args.get('userID')
-        if not user_id:
-            return jsonify({'error': 'Missing user ID'}), 400
-
-        # Query the wishlist collection for the user's wishlist items
-        wishlist_ref = db.collection('wishlist').where('User_ID', '==', user_id)
-        wishlist_items = wishlist_ref.stream()
-
-        # Collect book IDs from the wishlist
-        book_ids = [item.to_dict().get('Book_ID') for item in wishlist_items]
-
-        # Fetch details of each book from the books collection
-        books = []
-        for book_id in book_ids:
-            book_ref = db.collection('books').document(book_id)
-            book_doc = book_ref.get()
-            if book_doc.exists:
-                book_data = book_doc.to_dict()
-                book_data['id'] = book_id  # Add the document ID to the book data
-                books.append(book_data)
-
-        return jsonify(books), 200
-
-    except Exception as e:
-        print(f"Error fetching wishlist: {e}")
-        return jsonify({'error': 'Failed to fetch wishlist'}), 500
 
 
 # form submitted
 @app.route('/added-book', methods=['POST'])
-#@login_required
 def add_book():
     try:
         name = request.form.get('name')
@@ -297,6 +239,7 @@ def add_book():
         condition = request.form.get('condition')
         contact = request.form.get('contact')
         description = request.form.get('description')
+        user_id = request.form.get('user_id')
 
         image_urls = []
         for i in range(1, 4):  # Expecting up to 3 images
@@ -321,7 +264,16 @@ def add_book():
             'pic': image_urls,
             'description': description
         }
-        db.collection('books').add(form_data)   # add entry to books collection
+        book_ref = db.collection('books').add(form_data)   # add entry to books collection
+        
+        
+        # Also adds to listings
+        listing_data = {
+            'Book_ID': book_ref[1].id,
+            'User_ID': user_id
+        }
+
+        db.collection('listings').add(listing_data)
         return render_template('submitted.html')
     except Exception as e:
         print("Error in add_textbook:", e)
@@ -333,8 +285,6 @@ def upload_image(pic):
     blob.make_public()
     url = blob.public_url
     return url
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

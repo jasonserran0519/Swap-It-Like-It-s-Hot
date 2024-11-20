@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './AddBook.css';
+import { auth } from '../firebaseConfig';
 
 function AddBook() {
     const [formData, setFormData] = useState({
@@ -14,6 +15,18 @@ function AddBook() {
         description: '',
     });
     const [uploadedImages, setUploadedImages] = useState([]); // Array to hold image files
+    const [currentUserID, setCurrentUserID] = useState(null);
+
+    // This is to get the current user id
+    useEffect(() => {
+        const user = auth.currentUser;
+        if (user) {
+            setCurrentUserID(user.uid);
+        } else {
+            console.warn('No user is currently logged in.');
+        }
+    }, []);
+
 
     const RequiredStar = () => <span className="required-star">*</span>;
 
@@ -46,6 +59,8 @@ function AddBook() {
         const data = new FormData();
         // Append form fields
         Object.keys(formData).forEach((key) => data.append(key, formData[key]));
+        // Append the user id
+        data.append('user_id', currentUserID);
         // Append images
         uploadedImages.forEach(({ file }, index) => data.append(`pic${index + 1}`, file));
         try {
