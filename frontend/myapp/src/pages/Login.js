@@ -22,7 +22,6 @@ function Login() {
         return;
       }
 
-      
       const userData = {
         uid: userID,
         displayName: displayName,
@@ -42,7 +41,6 @@ function Login() {
       if (response.ok) {
         console.log("User successfully added to Firestore:", data.message);
         
-
         // If successful, then redirect to marketplace
         navigate('/marketplace');
       } else {

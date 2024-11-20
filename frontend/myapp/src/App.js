@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'r
 import Marketplace from './pages/Marketplace';
 import BookDetail from './pages/BookDetail';
 import Login from './pages/Login';
+import Wishlist from './pages/Wishlist';
 import Navbar from './components/Navbar/Navbar';
 import AddBook from './pages/AddBook';
 import useAuth from './hooks/useAuth'; // Import the custom hook to get auth status
@@ -59,6 +60,11 @@ function AppContent({ searchResults, setSearchResults }) {
         <Route
           path="/books/:id"
           element={isAuthenticated ? <BookDetail /> : <Navigate to="/" />}
+        />
+
+        <Route
+          path="/wishlist"
+          element={isAuthenticated ? <Wishlist /> : <Navigate to="/" />}
         />
       </Routes>
     </div>
