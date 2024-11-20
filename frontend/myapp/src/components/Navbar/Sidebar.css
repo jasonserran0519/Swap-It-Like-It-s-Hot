@@ -1,0 +1,56 @@
+.sidebar {
+    width: 200px;
+    background-color: beige;
+    padding: 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+.sidebar li {
+    margin-left: 20px;
+}
+
+.clear-filters-btn {
+    background-color: darkorange; /* Red color */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.clear-filters-btn:hover {
+    background-color: #d32f2f; /* Darker red when hovered */
+}
+
+.category-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.category-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-weight: normal;
+    color: #333;
+    transition: color 0.3s;
+}
+
+.category-item.selected {
+    font-weight: bold;
+    color: #007bff; /* Change color when selected */
+}
+
+.category-item input[type="radio"] {
+    margin-right: 8px;
+    accent-color: #007bff; /* Style for the radio button */
+}
+
+.clear-filters-btn {
+    margin-top: 15px;
+}
