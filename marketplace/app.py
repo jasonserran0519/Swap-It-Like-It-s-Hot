@@ -93,7 +93,6 @@ def view_book(book_id):
 def book_form():
     return render_template('newpost.html')
 
-
 # Add to wishlist function
 @app.route('/add_to_wishlist', methods=['POST'])
 def adding_to_wishlist():
@@ -114,11 +113,7 @@ def adding_to_wishlist():
         if any(query):
             return jsonify({"Message:": "Book is already in your wishlist!"}), 200
 
-        new_wishlist_item = {
-            'User_ID': user_id,
-            'Book_ID': book_id,
-        }
-
+        new_wishlist_item = {'User_ID': user_id,'Book_ID': book_id,}
         wishlist_ref.add(new_wishlist_item)
 
         return jsonify({'message': 'Book added to wishlist successfully!'}), 200
@@ -126,8 +121,45 @@ def adding_to_wishlist():
     except Exception as e:
         print(f"Error adding to wishlist: {e}")
         return jsonify({'error': 'Failed to add to wishlist'}), 500
-     
+    
+#get wishlist function
+from firebase_admin import auth as firebase_auth
 
+@app.route('/get_wishlist', methods=['GET'])
+def get_wishlist():
+    try:
+        # Extract the Authorization header
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({'error': 'Authorization token missing or invalid'}), 401
+        
+        # Get the token
+        id_token = auth_header.split('Bearer ')[1]
+
+        # Verify the token and decode the user's UID
+        decoded_token = firebase_auth.verify_id_token(id_token)
+        user_id = decoded_token['uid']
+
+        # Query the wishlist for the user
+        wishlist_ref = db.collection('wishlist').where('User_ID', '==', user_id)
+        wishlist_items = wishlist_ref.stream()
+
+        # Collect book details
+        book_ids = [item.to_dict().get('Book_ID') for item in wishlist_items]
+        books = []
+        for book_id in book_ids:
+            book_ref = db.collection('books').document(book_id)
+            book_doc = book_ref.get()
+            if book_doc.exists:
+                book_data = book_doc.to_dict()
+                book_data['id'] = book_id
+                books.append(book_data)
+
+        return jsonify(books), 200
+
+    except Exception as e:
+        print(f"Error fetching wishlist: {e}")
+        return jsonify({'error': 'Failed to fetch wishlist'}), 500
 
 @app.route('/search', methods=['GET'])
 def search_books():
@@ -164,9 +196,6 @@ def search():
     return search_books()
 
 
-
-
-
 #adding user after they sign in
 @app.route('/add_user', methods=['POST'])
 def adding_user():
@@ -191,97 +220,6 @@ def adding_user():
         # Log the exception for debugging purposes
         print(f"Error adding user: {e}")
         return jsonify({"error": "Failed to add user"}), 500
-
-@app.route('/get_wishlist', methods=['GET'])
-def get_wishlist():
-    try:
-        # Get the user ID from the query parameter
-        user_id = request.args.get('userID')
-        if not user_id:
-            return jsonify({'error': 'Missing user ID'}), 400
-
-        # Query the wishlist collection for the user's wishlist items
-        wishlist_ref = db.collection('wishlist').where('User_ID', '==', user_id)
-        wishlist_items = wishlist_ref.stream()
-
-        # Collect book IDs from the wishlist
-        book_ids = [item.to_dict().get('Book_ID') for item in wishlist_items]
-
-        # Fetch details of each book from the books collection
-        books = []
-        for book_id in book_ids:
-            book_ref = db.collection('books').document(book_id)
-            book_doc = book_ref.get()
-            if book_doc.exists:
-                book_data = book_doc.to_dict()
-                book_data['id'] = book_id  # Add the document ID to the book data
-                books.append(book_data)
-
-        return jsonify(books), 200
-
-    except Exception as e:
-        print(f"Error fetching wishlist: {e}")
-        return jsonify({'error': 'Failed to fetch wishlist'}), 500
-
-
-
-
-#adding user after they sign in
-@app.route('/add_user', methods=['POST'])
-def adding_user():
-    try:
-        # Get user data from the frontend (JSON body)
-        user_data = request.json
-        
-        # Check if all necessary data is provided
-        if not user_data.get('uid') or not user_data.get('displayName') or not user_data.get('email'):
-            return jsonify({"error": "Missing required user data"}), 400
-        
-        # Add the user to Firestore
-        user_ref = db.collection('users').document(user_data['uid'])
-        user_ref.set({
-            'uid': user_data['uid'],
-            'displayName': user_data['displayName'],
-            'email': user_data['email'],
-        })
-        
-        return jsonify({"message": "User added successfully"}), 200
-    except Exception as e:
-        # Log the exception for debugging purposes
-        print(f"Error adding user: {e}")
-        return jsonify({"error": "Failed to add user"}), 500
-
-@app.route('/get_wishlist', methods=['GET'])
-def get_wishlist():
-    try:
-        # Get the user ID from the query parameter
-        user_id = request.args.get('userID')
-        if not user_id:
-            return jsonify({'error': 'Missing user ID'}), 400
-
-        # Query the wishlist collection for the user's wishlist items
-        wishlist_ref = db.collection('wishlist').where('User_ID', '==', user_id)
-        wishlist_items = wishlist_ref.stream()
-
-        # Collect book IDs from the wishlist
-        book_ids = [item.to_dict().get('Book_ID') for item in wishlist_items]
-
-        # Fetch details of each book from the books collection
-        books = []
-        for book_id in book_ids:
-            book_ref = db.collection('books').document(book_id)
-            book_doc = book_ref.get()
-            if book_doc.exists:
-                book_data = book_doc.to_dict()
-                book_data['id'] = book_id  # Add the document ID to the book data
-                books.append(book_data)
-
-        return jsonify(books), 200
-
-    except Exception as e:
-        print(f"Error fetching wishlist: {e}")
-        return jsonify({'error': 'Failed to fetch wishlist'}), 500
-
 
 # form submitted
 @app.route('/added-book', methods=['POST'])
