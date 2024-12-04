@@ -16,15 +16,6 @@ function Marketplace({ searchResults }) {
         setSortOption('relevant');
         setBooks([]);  // Clear books if searchResults are cleared
     };
-
-    useEffect(() => {
-        if (!searchResults || searchResults.length === 0) {
-            fetchBooks();
-        } else {
-            setBooks(searchResults);  // Use searchResults directly if available
-        }
-    }, [sortOption, category, searchResults]);  // Avoid refetching if searchResults are available
-
     const fetchBooks = async () => {
         try {
             const query = new URLSearchParams();
@@ -38,6 +29,14 @@ function Marketplace({ searchResults }) {
             console.error("Error fetching books:", error);
         }
     };
+
+    useEffect(() => {
+        if (!searchResults || searchResults.length === 0) {
+            fetchBooks();
+        } else {
+            setBooks(searchResults);  // Use searchResults directly if available
+        }
+    }, [sortOption, category, searchResults]);  // Avoid refetching if searchResults are available
 
     useEffect(() => {
         const fetchCategories = async () => {
