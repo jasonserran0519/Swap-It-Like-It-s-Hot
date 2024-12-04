@@ -1,12 +1,14 @@
-/* Navbar.css */
-
-nav.navbar {
+.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: maroon;
     color: white;
     padding: 10px 20px;
+    position: sticky; /* Makes the navbar stick to the top */
+    top: 0; /* Position at the very top */
+    z-index: 1000; /* Ensures the navbar is above other elements */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Adds a subtle drop shadow */
 }
 
 .logo {
@@ -28,7 +30,7 @@ nav.navbar {
 .navbar-left, .navbar-center, .navbar-right {
     display: flex;
     align-items: center;
-    gap:15px;
+    gap: 15px;
 }
 
 .navbar-center {
@@ -107,17 +109,16 @@ nav.navbar {
 }
 
 .svg {
-    width:20px;
-    height:20px;
+    width: 20px;
+    height: 20px;
 }
 
-
 .reset-button {
-    background-color:  darkorange;  /* Light background for the reset button */
-    border: none;     /* Border to match the search button style */
-    margin-left: 10px;           /* Space between search and reset button */
-    padding: 5px 10px;           /* Padding for the button */
-    cursor: pointer;            /* Pointer cursor to indicate it's clickable */
+    background-color: darkorange;
+    border: none;
+    margin-left: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
 .profile-dropdown {

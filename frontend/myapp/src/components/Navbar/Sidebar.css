@@ -11,6 +11,33 @@
     margin-left: 20px;
 }
 
+.collapsible {
+    background-color: #eeeeee00;
+    color: #000000;
+    cursor: pointer;
+    padding: 10px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 15px;
+  }
+
+  .active, .collapsible:hover {
+    color: darkorange;
+    background-color: beige;
+  }
+
+  .collapsed-courses {
+    padding: 0 18px;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+
+  .collapsed-courses {
+    display: block; /* Ensures it shows when the state is true */
+}
+  
 .clear-filters-btn {
     background-color: darkorange; /* Red color */
     color: white;
@@ -43,12 +70,12 @@
 
 .category-item.selected {
     font-weight: bold;
-    color: #007bff; /* Change color when selected */
+    color: darkorange; /* Change color when selected */
 }
 
 .category-item input[type="radio"] {
     margin-right: 8px;
-    accent-color: #007bff; /* Style for the radio button */
+    accent-color: darkorange; /* Style for the radio button */
 }
 
 .clear-filters-btn {

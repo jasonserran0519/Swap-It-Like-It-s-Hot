@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './Sidebar.css';
 
-
 function Dropdown({ sortOption, setSortOption }) {
     const handleChange = (event) => {
         setSortOption(event.target.value);
@@ -21,6 +20,7 @@ function Dropdown({ sortOption, setSortOption }) {
 
 function Sidebar({ setCategory, sortOption, setSortOption, categories, clearFilters }) {
     const [selectedCategory, setSelectedCategory] = useState('');
+    const [isCoursesVisible, setIsCoursesVisible] = useState(false); // State for toggling courses section
 
     const handleCategoryChange = (category) => {
         setSelectedCategory(category);
@@ -32,26 +32,39 @@ function Sidebar({ setCategory, sortOption, setSortOption, categories, clearFilt
         clearFilters();
     };
 
+    const toggleCoursesVisibility = () => {
+        setIsCoursesVisible((prev) => !prev); // Toggle the visibility state
+    };
+
     return (
         <div className="sidebar">
             <h2>Filters</h2>
             <Dropdown sortOption={sortOption} setSortOption={setSortOption} />
             <h3>Categories</h3>
-            <div className="category-list">
-                {categories.map((category) => (
-                    <label key={category} className={`category-item ${selectedCategory === category ? 'selected' : ''}`}>
-                        <input
-                            type="radio"
-                            name="category"
-                            value={category}
-                            checked={selectedCategory === category}
-                            onChange={() => handleCategoryChange(category)}
-                        />
-                        {category}
-                    </label>
-                ))}
-            </div>
-            <button onClick={handleClearFilters} className="clear-filters-btn">Clear Filters</button>
+            <button type="button" className="collapsible" onClick={toggleCoursesVisibility}>
+                Courses
+            </button>
+            {isCoursesVisible && ( // Conditionally render the courses section
+                <div className="collapsed-courses">
+                    <div className="category-list">
+                        {categories.map((category) => (
+                            <label key={category} className={`category-item ${selectedCategory === category ? 'selected' : ''}`}>
+                                <input
+                                    type="radio"
+                                    name="category"
+                                    value={category}
+                                    checked={selectedCategory === category}
+                                    onChange={() => handleCategoryChange(category)}
+                                />
+                                {category}
+                            </label>
+                        ))}
+                    </div>
+                </div>
+            )}
+            <button onClick={handleClearFilters} className="clear-filters-btn">
+                Clear Filters
+            </button>
         </div>
     );
 }

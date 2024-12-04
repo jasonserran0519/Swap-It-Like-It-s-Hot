@@ -42,7 +42,9 @@ function Navbar({ setSearchResults }) {
             setError("Please enter a search term");
             return;
         }
+
         performSearch(searchTerm, category);
+        navigate('/marketplace');
         console.log('Search for:', searchTerm, 'in category:', category);
     };
 
