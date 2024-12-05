@@ -274,6 +274,43 @@ def add_book():
         print("Error in add_textbook:", e)
         return jsonify({'success': False, 'error': str(e)}), 500
 
+# Path for showing the listings
+@app.route('/my_listings', methods=['GET'])
+def view_listings():
+    try:
+        # Extract the Authorization header
+        auth_header = request.headers.get('Authorization')
+        if not auth_header or not auth_header.startswith('Bearer '):
+            return jsonify({'error': 'Authorization token missing or invalid'}), 401
+        
+        # Get the token
+        id_token = auth_header.split('Bearer ')[1]
+
+        # Verify the token and decode the user's UID
+        decoded_token = firebase_auth.verify_id_token(id_token)
+        user_id = decoded_token['uid']
+
+        # Query the wishlist for the user
+        listings_ref = db.collection('listings').where('User_ID', '==', user_id)
+        listings_items = listings_ref.stream()
+
+        # Collect book details
+        book_ids = [item.to_dict().get('Book_ID') for item in listings_items]
+        books = []
+        for book_id in book_ids:
+            book_ref = db.collection('books').document(book_id)
+            book_doc = book_ref.get()
+            if book_doc.exists:
+                book_data = book_doc.to_dict()
+                book_data['id'] = book_id
+                books.append(book_data)
+
+        return jsonify(books), 200
+
+    except Exception as e:
+        print(f"Error fetching my listings: {e}")
+        return jsonify({'error': 'Failed to fetch your listings'}), 500
+
 def upload_image(pic):
     blob = bucket.blob(pic.filename)
     blob.upload_from_file(pic, content_type=pic.content_type)
