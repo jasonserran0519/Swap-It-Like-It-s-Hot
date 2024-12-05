@@ -1,5 +1,6 @@
 import firebase_admin
 from firebase_admin import credentials, firestore, storage
+from firebase_admin import auth as firebase_auth
 from flask import Flask, jsonify, request, render_template, redirect, url_for, g, flash
 from flask_cors import CORS
 
@@ -122,9 +123,64 @@ def adding_to_wishlist():
         print(f"Error adding to wishlist: {e}")
         return jsonify({'error': 'Failed to add to wishlist'}), 500
     
-#get wishlist function
-from firebase_admin import auth as firebase_auth
+# Remove from wishlist function
+@app.route('/remove_from_wishlist', methods=['POST'])
+def removing_from_wishlist():
+    try:
+        # Extract data from the request
+        data = request.json
+        user_id = data.get('User_ID')
+        book_id = data.get('Book_ID')
+        
+        # Validate the input
+        if not user_id or not book_id:
+            return jsonify({'error': 'Missing user ID or book ID'}), 400
+    
+        # Create or update a document in the Wishlist collection
+        wishlist_ref = db.collection('wishlist')
+        query = wishlist_ref.where('User_ID', '==', user_id).where('Book_ID', '==', book_id).stream()
 
+        # Check if the document exists
+        doc = next(query, None)  # Get the first document if it exists
+
+        if doc:
+            # If found, delete the document
+            wishlist_ref.document(doc.id).delete()
+            return jsonify({"message": "Book removed from wishlist successfully!"}), 200
+        else:
+            return jsonify({"error": "Item not found in wishlist"}), 404
+
+    except Exception as e:
+        # Handle any errors
+        return jsonify({"error": str(e)}), 500
+
+# Add to wishlist function
+@app.route('/is_in_wishlist', methods=['POST'])
+def is_in_wishlist():
+    try:
+        # Extract data from the request
+        data = request.json
+        user_id = data.get('User_ID')
+        book_id = data.get('Book_ID')
+        
+        # Validate the input
+        if not user_id or not book_id:
+            return jsonify({'error': 'Missing user ID or book ID'}), 400
+    
+        # Create or update a document in the Wishlist collection
+        wishlist_ref = db.collection('wishlist')
+        query = wishlist_ref.where('User_ID', '==', user_id).where('Book_ID', '==', book_id).stream()
+
+        if any(query):
+            return jsonify({"isInWishlist": True}), 200
+        else:
+            return jsonify({"isInWishlist": False}), 200
+
+    except Exception as e:
+        print("Error in is_in_wishlist:", str(e))
+        return jsonify({"error": "An error occurred while checking the wishlist status"}), 500
+    
+#get wishlist function
 @app.route('/get_wishlist', methods=['GET'])
 def get_wishlist():
     try:
