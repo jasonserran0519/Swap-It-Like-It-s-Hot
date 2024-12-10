@@ -3,6 +3,9 @@ from firebase_admin import credentials, firestore, storage
 from firebase_admin import auth as firebase_auth
 from flask import Flask, jsonify, request, render_template, redirect, url_for, g, flash
 from flask_cors import CORS
+from flask_mail import Mail, Message
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 
@@ -15,6 +18,15 @@ bucket=storage.bucket()
 CORS(app, origins=["http://localhost:3000"], supports_credentials=True)
 #CORS(app)
 
+load_dotenv()
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USE_SSL'] = False
+mail = Mail(app)
+
 # home page
 @app.route('/')
 def index():
@@ -23,19 +35,6 @@ def index():
     books_ref = db.collection('books')
     books = [doc.to_dict() for doc in books_ref.stream()]
     return render_template('index_copy.html', books=books)
-
-# view all books
-# @app.route('/books', methods=['GET'])
-# def get_books():
-#     books_ref = db.collection('books')
-#     books = [doc.to_dict() for doc in books_ref.stream()]
-#     return jsonify(books)
-
-# @app.route('/books', methods=['GET'])
-# def get_books():
-#     books_ref = db.collection('books')
-#     books = [{"id": doc.to_dict().get('id'), **doc.to_dict()} for doc in books_ref.stream()]  # Include document ID
-#     return jsonify(books)
 
 @app.route('/books', methods=['GET'])
 def get_books():
@@ -216,6 +215,69 @@ def get_wishlist():
     except Exception as e:
         print(f"Error fetching wishlist: {e}")
         return jsonify({'error': 'Failed to fetch wishlist'}), 500
+
+@app.route('/report_seller', methods=['POST'])
+def report_seller():
+    print(request.json)  # Debug
+    
+    data = request.json
+    seller_email = data.get('seller_email')
+    buyer_email = data.get('buyer_email')
+    book_name = data.get('book_name')
+
+    if not all([seller_email, buyer_email, book_name]):
+        return jsonify({'error': 'Missing required fields'}), 400
+    
+    try:
+        msg = Message(
+            subject=f'Interest in your listing: {book_name}', 
+            sender='swapitlikeitshot.silih@gmail.com',
+            recipients=[seller_email]
+        )
+        msg.body = (
+            f"Hello,\n\n"
+            f"It was reported that your book listing '{book_name}', is a bit too high in price.\n\n"
+            f"Consider reducing the price on your listing!\n\n"
+            "Thank you!"
+        )
+        mail.send(msg)
+        return jsonify({'message': 'Email sent successfully'}), 200
+    
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Failed to send email'}), 500
+
+@app.route('/show_interest', methods=['POST'])
+def show_interest():
+    print(request.json)  # Debug
+    
+    data = request.json
+    seller_email = data.get('seller_email')
+    buyer_email = data.get('buyer_email')
+    book_name = data.get('book_name')
+
+    if not all([seller_email, buyer_email, book_name]):
+        return jsonify({'error': 'Missing required fields'}), 400
+    
+    try:
+        msg = Message(
+            subject=f'Interest in your listing: {book_name}', 
+            sender='swapitlikeitshot.silih@gmail.com',
+            recipients=[seller_email]
+        )
+        msg.body = (
+            f"Hello,\n\n"
+            f"A buyer is interested in your book listing '{book_name}'.\n\n"
+            f"Buyer's email: {buyer_email}\n\n"
+            f"Please reach out to the buyer if the book is still available, or take down the listing if it is not.\n\n"
+            "Thank you!"
+        )
+        mail.send(msg)
+        return jsonify({'message': 'Email sent successfully'}), 200
+    
+    except Exception as e:
+        print(f"Error: {e}")
+        return jsonify({'error': 'Failed to send email'}), 500
 
 @app.route('/search', methods=['GET'])
 def search_books():

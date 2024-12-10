@@ -12,6 +12,7 @@ function BookDetail() {
   const [message, setMessage] = useState('');
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [isInWishlist, setIsInWishlist] = useState(false); // State to track wishlist status
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
   useEffect(() => {
     const fetchBookDetail = async () => {
@@ -40,6 +41,10 @@ function BookDetail() {
     fetchBookDetail();
   }, [id]);
 
+  const toggleDropdown = () => {
+    setIsDropdownVisible(!isDropdownVisible);
+  };
+
   const handleContactSeller = () => {
     if (book && book.contact) {
       setIsPopupVisible(true);
@@ -47,6 +52,69 @@ function BookDetail() {
       setMessage('Seller email not available.');
     }
   };
+
+  const handleReportPrice = async () => {
+    if (book && book.contact) {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/report_seller`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            seller_email: book.contact,
+            buyer_email: auth.currentUser?.email,
+            book_name: book.name,
+          }),
+        });
+        
+        if (!response.ok) {
+          console.error("Failed to check report status:", response.statusText);
+          return;
+        }
+  
+        const result = await response.json();
+        if (result.message) {
+          console.log('Listing reported successfully!');
+        }
+      } catch (error) {
+        console.error('Error contacting seller:', error);
+      }
+    }
+    setIsDropdownVisible(!isDropdownVisible);
+  };  
+
+  const handleInterest = async () => {
+    setIsPopupVisible(false)
+    if (book && book.contact) {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/show_interest`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            seller_email: book.contact,
+            buyer_email: auth.currentUser?.email,
+            book_name: book.name,
+          }),
+        });
+
+        if (!response.ok) {
+          console.error("Failed to check contact status:", response.statusText);
+          return;
+        }
+
+        const result = await response.json();
+        if (result.message) {
+          console.log('Listing interest sent successfully!');
+        }
+        
+      } catch (error) {
+        console.error('Error contacting seller:', error);
+      }
+    }
+  };  
 
   const checkIfInWishlist = async () => {
     const userId = auth.currentUser.uid;
@@ -199,17 +267,27 @@ function BookDetail() {
               </svg>
             </button>
 
-            <button className="report-btn">
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="20"
-                    height="20"
-                    fill="white"
-                    viewBox="0 0 24 24"
-                >
-                    <path d="M4 4v16h2v-6h9.5l1 1H20V7h-3.5l-1-1H6V4H4zm13 8.5h-8V9.5h8v3z" />
-                </svg>
-            </button>
+            <div className="report-dropdown">
+              <button onClick={toggleDropdown} className="report-btn">
+                  <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="white"
+                      viewBox="0 0 24 24"
+                  >
+                      <path d="M4 4v16h2v-6h9.5l1 1H20V7h-3.5l-1-1H6V4H4zm13 8.5h-8V9.5h8v3z" />
+                  </svg>
+              </button>
+              {isDropdownVisible && (
+                <div className="dropdown-report-menu">
+                  <button onClick={handleReportPrice} className="dropdown-report-item"> Price too high</button>
+                  {message && <div className="message-box">{message}</div>}
+                  <button onClick={toggleDropdown}className="dropdown-report-item"> False listing</button>
+                  <button onClick={toggleDropdown} className="dropdown-report-item"> Inappropriate language</button>
+                </div>
+              )}
+            </div>
 
             <button onClick={handleContactSeller} className="contact-btn">
               Contact
@@ -222,7 +300,10 @@ function BookDetail() {
             <div className="popup-content">
               <h3>Contact Seller</h3>
               <p>Email: {book.contact}</p>
-              <button onClick={() => setIsPopupVisible(false)}>Close</button>
+              <div className="popup-buttons"> 
+                <button onClick={handleInterest}>Contact</button>
+                <button onClick={() => setIsPopupVisible(false)}>Close</button>
+              </div>
             </div>
           </div>
         )}
