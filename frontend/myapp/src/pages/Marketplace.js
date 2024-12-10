@@ -52,6 +52,26 @@ function Marketplace({ searchResults }) {
         fetchCategories();
     }, []);
 
+    useEffect(() => {
+        console.log("searchResults in Marketplace:", searchResults);
+        if (!searchResults || searchResults.length === 0) {
+            fetchBooks(); // Fall back to fetching books
+        } else {
+            setBooks(searchResults);
+        }
+    }, [sortOption, category, searchResults]);
+
+    if (searchResults && searchResults.length > 0) {
+        console.log("First book in searchResults:", searchResults[0]);
+    }
+
+    useEffect(() => {
+        if (searchResults && searchResults.length > 0) {
+            console.log("Setting books from searchResults:", searchResults);
+            setBooks(searchResults);
+        }
+    }, [searchResults]);
+
     return (
         <div className="marketplace-container">
             <Sidebar

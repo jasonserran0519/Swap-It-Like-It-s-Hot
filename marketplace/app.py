@@ -37,6 +37,10 @@ def index():
 #     books = [{"id": doc.to_dict().get('id'), **doc.to_dict()} for doc in books_ref.stream()]  # Include document ID
 #     return jsonify(books)
 
+# Helper function to normalize text (case and whitespace trimming)
+def normalize_text(text):
+    return text.strip().lower() if text else ''
+
 @app.route('/books', methods=['GET'])
 def get_books():
     books_ref = db.collection('books')
@@ -62,21 +66,24 @@ def get_books():
 
 @app.route('/course_numbers', methods=['GET'])
 def get_course_numbers():
-    books_ref = db.collection('books')
+    try: 
+        books_ref = db.collection('books')
 
-    # Retrieve all documents in the collection
-    books = books_ref.stream()
+        # Retrieve all documents in the collection
+        books = books_ref.stream()
 
-    # Extract unique course numbers
-    course_numbers = set()
-    for doc in books:
-        book_data = doc.to_dict()
-        course_num = book_data.get('course_num')
-        if course_num:
-            course_numbers.add(course_num)
-
-    # Return the list of unique course numbers
-    return jsonify(list(course_numbers))
+        # Extract unique course numbers
+        course_numbers = ()
+        for doc in books:
+            book_data = doc.to_dict()
+            course_num = book_data.get('course_num')
+            if course_num:
+                course_numbers.add(course_num)
+        # Return the list of unique course numbers
+        return jsonify(list(course_numbers))
+    except Exception as e: 
+        print(f"Error in get_course_numbers: {e}")
+        return jsonify({'error': 'Failed to fetch course numbers'}), 500
 
 # view selected book
 @app.route('/books/<book_id>', methods=['GET'])
@@ -221,9 +228,9 @@ def get_wishlist():
 def search_books():
     try:
         books_ref = db.collection('books')
-        name = request.args.get('name', '').lower()
-        author = request.args.get('author', '').lower()
-        isbn = request.args.get('isbn', '')
+        name = normalize_text(request.args.get('name', ''))
+        author = normalize_text(request.args.get('author', ''))
+        isbn = request.args.get('isbn', '').strip()
 
         results = []
 
@@ -245,11 +252,15 @@ def search_books():
 
         # Search by ISBN (exact match)
         if isbn:
-            isbn_books = books_ref.where('isbn', '==', int(isbn)).stream()
-            for doc in isbn_books:
-                book_data = doc.to_dict()
-                book_data['id'] = doc.id
-                results.append(book_data)
+            try:
+                isbn_int = int(isbn)  # Ensure ISBN is treated as an integer
+                isbn_books = books_ref.where('isbn', '==', isbn_int).stream()
+                for doc in isbn_books:
+                    book_data = doc.to_dict()
+                    book_data['id'] = doc.id
+                    results.append(book_data)
+            except ValueError:
+                print(f"Invalid ISBN: {isbn}")
 
         # Combine results and remove duplicates based on book ID
         unique_results = {book['id']: book for book in results}.values()

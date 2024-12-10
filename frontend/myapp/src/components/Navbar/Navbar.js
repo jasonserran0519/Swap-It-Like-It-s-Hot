@@ -20,7 +20,8 @@ function Navbar({ setSearchResults }) {
 
     const performSearch = async (query, category) => {
         try {
-            const response = await fetch(`http://127.0.0.1:5000/search?name=${query}&course_num=${category}`);
+            const queryParam = category ? `${category}=${query}` : `name=${query}`;
+            const response = await fetch(`http://127.0.0.1:5000/search?${queryParam}`);
             if (!response.ok) throw new Error(`Failed to fetch search results: ${response.statusText}`);
 
             const data = await response.json();
@@ -29,7 +30,8 @@ function Navbar({ setSearchResults }) {
 
             // Reset search input fields after search
             setSearchTerm('');
-            setCategory('');
+            // setCategory('');
+            console.log("Performing search with category:", category);
         } catch (error) {
             console.error("Error fetching search results:", error);
             setError("Failed to fetch search results. Please try again.");
