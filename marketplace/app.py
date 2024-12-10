@@ -163,33 +163,46 @@ def get_wishlist():
 
 @app.route('/search', methods=['GET'])
 def search_books():
-    books_ref = db.collection('books')
-    
-    # Get query parameters from the request
-    name = request.args.get('name', '').lower()  # Convert name to lowercase for case-insensitive matching
-    course_num = request.args.get('course_num', '')  # Using course_num instead of author or isbn directly
-
-    # Apply filters based on available parameters
-    if name:
-        books_ref = books_ref.where('name', '>=', name).where('name', '<=', name + '\uf8ff')  # Firestore range query
-
-    if course_num:
-        books_ref = books_ref.where('course_num', '==', course_num)
-
-    # Retrieve and format results
-    results = []
     try:
-        for doc in books_ref.stream():
-            book_data = doc.to_dict()
-            book_data['id'] = doc.id
-            results.append(book_data)
+        books_ref = db.collection('books')
+        name = request.args.get('name', '').lower()
+        author = request.args.get('author', '').lower()
+        isbn = request.args.get('isbn', '')
 
-        return jsonify(results)
-    
+        results = []
+
+        # Search by name (case-insensitive prefix search)
+        if name:
+            name_books = books_ref.where('name', '>=', name).where('name', '<=', name + '\uf8ff').stream()
+            for doc in name_books:
+                book_data = doc.to_dict()
+                book_data['id'] = doc.id
+                results.append(book_data)
+
+        # Search by author (case-insensitive prefix search)
+        if author:
+            author_books = books_ref.where('author', '>=', author).where('author', '<=', author + '\uf8ff').stream()
+            for doc in author_books:
+                book_data = doc.to_dict()
+                book_data['id'] = doc.id
+                results.append(book_data)
+
+        # Search by ISBN (exact match)
+        if isbn:
+            isbn_books = books_ref.where('isbn', '==', int(isbn)).stream()
+            for doc in isbn_books:
+                book_data = doc.to_dict()
+                book_data['id'] = doc.id
+                results.append(book_data)
+
+        # Combine results and remove duplicates based on book ID
+        unique_results = {book['id']: book for book in results}.values()
+
+        return jsonify(list(unique_results))
+
     except Exception as e:
-        print(f"Error in search: {e}")
+        print(f"Error in search_books: {e}")
         return jsonify({'error': 'An error occurred while searching for books'}), 500
-
 
 @app.route('/search', methods=['GET'])
 def search():
