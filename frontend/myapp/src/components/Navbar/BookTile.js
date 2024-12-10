@@ -3,6 +3,8 @@ import './BookTile.css';
 
 function BookTile({book}) {
 
+    console.log("Book data in BookTile:", book);
+
     const placeholderImage = `${process.env.PUBLIC_URL}/images/placeholder.png`;
 
     return (
