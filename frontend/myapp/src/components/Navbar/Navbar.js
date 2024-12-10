@@ -117,7 +117,7 @@ function Navbar({ setSearchResults }) {
                     </button>
                     {isDropdownOpen && (
                         <div className="dropdown-menu">
-                            <Link to="/my-listings" className="dropdown-item">My Listings</Link>
+                            <Link to="/my_listings" className="dropdown-item">My Listings</Link>
                             <button onClick={handleLogout} className="dropdown-item">Logout</button>
                         </div>
                     )}

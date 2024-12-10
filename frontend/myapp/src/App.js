@@ -5,6 +5,7 @@ import Marketplace from './pages/Marketplace';
 import BookDetail from './pages/BookDetail';
 import Login from './pages/Login';
 import Wishlist from './pages/Wishlist';
+import Listings from './pages/Listings';
 import Navbar from './components/Navbar/Navbar';
 import AddBook from './pages/AddBook';
 import useAuth from './hooks/useAuth'; // Import the custom hook to get auth status
@@ -65,6 +66,11 @@ function AppContent({ searchResults, setSearchResults }) {
         <Route
           path="/wishlist"
           element={isAuthenticated ? <Wishlist /> : <Navigate to="/" />}
+        />
+
+<Route
+          path="/my_listings"
+          element={isAuthenticated ? <Listings /> : <Navigate to="/" />}
         />
       </Routes>
     </div>
