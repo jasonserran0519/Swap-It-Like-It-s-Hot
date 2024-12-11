@@ -342,7 +342,7 @@ def search_books():
                 print(f"Invalid ISBN: {isbn}")
 
         # Combine results and remove duplicates based on book ID
-        unique_results = {book['id']: book for book in results}.values()
+        unique_results = list({book['id']: book for book in results}.values())
 
         return jsonify(list(unique_results))
 
