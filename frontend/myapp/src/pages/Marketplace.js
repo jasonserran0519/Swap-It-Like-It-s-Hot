@@ -52,9 +52,10 @@ function Marketplace({ searchResults = [] }) {
             try {
                 const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/course_numbers`);
                 const data = await response.json();
-                setCategories(data);
+                setCategories(Array.isArray(data) ? data : []);
             } catch (error) {
                 console.error("Error fetching course numbers:", error);
+                setCategories([]);
             }
         };
 

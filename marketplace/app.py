@@ -86,14 +86,17 @@ def get_course_numbers():
         books = books_ref.stream()
 
         # Extract unique course numbers
-        course_numbers = ()
+        course_numbers = set()
         for doc in books:
             book_data = doc.to_dict()
+            print("book data fetched:", book_data)
             course_num = book_data.get('course_num')
             if course_num:
                 course_numbers.add(course_num)
         # Return the list of unique course numbers
-        return jsonify(list(course_numbers))
+        response = list(course_numbers)
+        print("fetched course numbers:", response)
+        return jsonify(response)
     except Exception as e: 
         print(f"Error in get_course_numbers: {e}")
         return jsonify({'error': 'Failed to fetch course numbers'}), 500
