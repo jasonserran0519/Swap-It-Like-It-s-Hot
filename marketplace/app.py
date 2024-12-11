@@ -61,8 +61,21 @@ def get_books():
         books = sorted(books, key=lambda x: float(x.get('price', 0)))
     elif sort_option == 'high_to_low':
         books = sorted(books, key=lambda x: float(x.get('price', 0)), reverse=True)
+        
+    #pagination
+    page = int(request.args.get('page', 1))  # Default to page 1
+    limit = int(request.args.get('limit', 10))  # Default to 10 items per page
+    start_index = (page - 1) * limit
+    end_index = start_index + limit
 
-    return jsonify(books)
+    paginated_books = books[start_index:end_index]
+
+    return jsonify({
+        'books': paginated_books,
+        'total': len(books),
+        'page': page,
+        'pages': -(-len(books) // limit)    
+    })
 
 @app.route('/course_numbers', methods=['GET'])
 def get_course_numbers():

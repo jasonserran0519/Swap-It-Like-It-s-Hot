@@ -1,7 +1,16 @@
 .marketplace-container {
     display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
 }
 
+.sidebar{
+    width: 25%;
+    flex-shrink: 0;
+    padding: 20px;
+    background: #f4f4f4;
+}
 .marketplace-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Increased min-width for larger tiles */
@@ -10,4 +19,29 @@
     flex-grow: 1;
 }
 
+.marketplace-grid-container {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.pagination button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+.pagination button.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
