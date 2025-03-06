@@ -38,9 +38,9 @@ pip install flask-mail
 
 to run the application
 
-'''
+```
 flask run
-'''
+```
 
 
 
